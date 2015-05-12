@@ -1,0 +1,110 @@
+--boutons--
+Nouveau
+Continuer
+Options
+Quitter
+Appliquer
+Défaut
+Améliorer
+Retour
+Construire
+Ok
+Annuler
+Fermer
+Information
+Détruire
+--menu--
+Menu
+Options
+Compétences
+Constructions
+Population
+Informations
+Nouveau Jeu
+--guimenu--
+*Options
+Taille
+Plein écran
+Details
+Animations
+Langue
+*Population
+Population totale
+*Nouveau Jeu
+Taille de la carte
+--noms--
+Plaine
+Forêt
+Montagne
+Mer
+Plage
+Ville
+Camp de bucherons
+Mine
+--gui--
+*Ville
+Population
+*Camp de bucheron
+Bucheron
+Plus d'arbres !
+*Mine
+Mineur
+--desc--
+*Plaine
+Une prairie verdoyante
+avec
+arbre
+*Forêt
+Environ
+arbres
+*Montagne
+Un massif montagneux banal.
+*Mer
+Une mer paisible.
+*Plage
+Surement pleine de crabe.
+*Ville
+Un village en plein essor.
+Construction
+*Camp de bucheron
+Un camp de Bucherons.
+Construction
+*Mine
+De plus en plus profond...
+Construction
+--metiers--
+Population
+Ouvriers
+Bucherons
+Mineurs
+--util--
+Logement des habitants
+Recolte de bois
+Extrait de la pierre
+--usage--
+Oui
+Non
+Ce
+Cette
+--info--
+finis
+placé
+habitants
+--date--
+Jan
+Fev
+Mar
+Avr
+Mai
+Jun
+Jul
+Aou
+Sep
+Oct
+Nov
+Dec
+--warning--
+Attention
+Voulez-vous vraiment détruire
+Cette action est irreversible
+--

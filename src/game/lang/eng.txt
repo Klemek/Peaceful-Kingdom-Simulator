@@ -1,0 +1,110 @@
+--buttons--
+New
+Continue
+Options
+Quit
+Apply
+Default
+Upgrade
+Back
+Build
+Ok
+Cancel
+Close
+Information
+Destroy
+--menu--
+Menu
+Options
+Skills
+Builds
+Population
+Informations
+New Game
+--guimenu--
+*Options
+Size
+Full screen
+Details
+Animations
+Language
+*Population
+Total population
+*New Game
+Map size
+--names--
+Plain
+Forest
+Mountains
+Sea
+Beach
+City
+Woodcutter's camp
+Mine
+--gui--
+*City
+Population
+*Woodcutter's camp
+Woodcutter
+No tree left !
+*Mine
+Stonecutter
+--desc--
+*Plain
+A green meadow
+with
+tree
+*Forest
+Aproximatly
+trees
+*Montain
+An ordinary mountains.
+*Sea
+A peaceful sea.
+*Beach
+Probably full of crabs.
+*City
+A growing village.
+Building
+*Woodcutter's camp
+A Woodcutter's camp.
+Building
+*Mine
+Deeper and deeper...
+Building
+--jobs--
+Population
+Workers
+Woodcutters
+Stonecutters
+--util--
+Resident housing
+Harvest wood
+Extract stone
+--usage--
+Yes
+No
+This
+This
+--info--
+finished
+placed
+people
+--date--
+Jan
+Feb
+Mar
+Apr
+May
+Jun
+Jul
+Aug
+Sep
+Oct
+Nov
+Dec
+--warning--
+Warning
+Do you realy want to destroy
+This can't be undone
+--
