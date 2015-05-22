@@ -2,11 +2,11 @@ package game;
 
 public class MapGeneration {
 	
-	private boolean INFO = false;
+	private boolean INFO = true;
 	
 	private int GEN = 2;
 	
-	public Terrain[][] generate(int taille, Base b) {
+	public Terrain[][] generate(int taille, Base ba) {
 
 		if(INFO)System.out.println("[MAP]Génération de la carte");
 		
@@ -16,7 +16,7 @@ public class MapGeneration {
 		case 0:
 			for(int i = 0; i < taille; i++){for(int i2 = 0; i2 < taille; i2++){	
 				int r = Util.randomInt(1,3);
-				map0[i][i2] = r==1?new Plaine(i,i2,b):r==2?new Mer(i,i2,b):new Montagne(i,i2,b);
+				map0[i][i2] = r==1?new Plaine(i,i2,ba):r==2?new Mer(i,i2,ba):new Montagne(i,i2,ba);
 			}}
 			break;
 		case 1:
@@ -31,11 +31,11 @@ public class MapGeneration {
 						c3=(t1!=2&&t2!=2&&t3!=2&&t4!=2)?((t1==3)?20:0)+((t2==3)?20:0)+((t3==3)?20:0)+((t4==3)?20:0):(t2!=2&&t4!=2)?30:0;
 						r = Util.randomInt(0,100);
 						if(r <= c2){
-							map0[i][i2] = new Mer(i,i2,b);
+							map0[i][i2] = new Mer(i,i2,ba);
 						}else if(r > c2 && r <= (c2+c3)){
-							map0[i][i2] = new Montagne(i,i2,b);
+							map0[i][i2] = new Montagne(i,i2,ba);
 						}else{
-							map0[i][i2] = new Plaine(i,i2,b);
+							map0[i][i2] = new Plaine(i,i2,ba);
 						}	
 			}}
 			break;
@@ -54,7 +54,7 @@ public class MapGeneration {
 			}}
 			*/
 			for(int i2 = taille-1; i2 >= 0; i2--){for(int i = 0; i < taille; i++){
-				map0[i][i2] = new Plaine(i,i2,b);
+				map0[i][i2] = new Plaine(i,i2,ba);
 			}}
 			int nblacs = Util.randomInt(1,nbmaxlacs);
 			if(INFO)System.out.println("[MAP]"+nblacs+" lac(s)");
@@ -68,7 +68,7 @@ public class MapGeneration {
 					i1[0] = Util.randomInt(0,taille-1);
 					i2[0] = Util.randomInt(0,taille-1);
 					if(map0[i1[0]][i2[0]].getType() != 2){
-						map0[i1[0]][i2[0]] = new Mer(i1[0],i2[0],b);
+						map0[i1[0]][i2[0]] = new Mer(i1[0],i2[0],ba);
 						continuer = false;
 					}
 				}
@@ -76,21 +76,21 @@ public class MapGeneration {
 				for(int j = 1; j < taillel; j++){
 					continuer = true;
 					while(continuer){
-						int ba = Util.randomInt(0,j-1);
+						int ba2 = Util.randomInt(0,j-1);
 						int d = Util.randomInt(0,1);
 						int d2 = (Util.randomInt(0,1)==0?-1:1);
 						if(d == 0){
-							i1[j] = i1[ba] + d2;
+							i1[j] = i1[ba2] + d2;
 							i1[j] = i1[j] < 0?0:i1[j] >= taille?taille-1:i1[j];
-							i2[j]=i2[ba];
+							i2[j]=i2[ba2];
 						}else{
-							i2[j] = i2[ba] + d2;
+							i2[j] = i2[ba2] + d2;
 							i2[j] = i2[j] < 0?0:i2[j] >= taille?taille-1:i2[j];
-							i1[j]=i1[ba];
+							i1[j]=i1[ba2];
 						}
 						
 						if(map0[i1[j]][i2[j]].getType() != 2){
-							map0[i1[j]][i2[j]] = new Mer(i1[j],i2[j],b);
+							map0[i1[j]][i2[j]] = new Mer(i1[j],i2[j],ba);
 							continuer = false;
 						}
 						
@@ -110,7 +110,7 @@ public class MapGeneration {
 					i1[0] = Util.randomInt(0,taille-1);
 					i2[0] = Util.randomInt(0,taille-1);
 					if(map0[i1[0]][i2[0]].getType() != 3 && map0[i1[0]][i2[0]].getType() != 2){
-						map0[i1[0]][i2[0]] = new Montagne(i1[0],i2[0],b);
+						map0[i1[0]][i2[0]] = new Montagne(i1[0],i2[0],ba);
 						continuer = false;
 					}
 				}
@@ -118,21 +118,21 @@ public class MapGeneration {
 				for(int j = 1; j < taillem; j++){
 					continuer = true;
 					while(continuer){
-						int ba = Util.randomInt(0,j-1);
+						int ba2 = Util.randomInt(0,j-1);
 						int d = Util.randomInt(0,1);
 						int d2 = (Util.randomInt(0,1)==0?-1:1);
 						if(d == 0){
-							i1[j] = i1[ba] + d2;
+							i1[j] = i1[ba2] + d2;
 							i1[j] = i1[j] < 0?0:i1[j] >= taille?taille-1:i1[j];
-							i2[j]=i2[ba];
+							i2[j]=i2[ba2];
 						}else{
-							i2[j] = i2[ba] + d2;
+							i2[j] = i2[ba2] + d2;
 							i2[j] = i2[j] < 0?0:i2[j] >= taille?taille-1:i2[j];
-							i1[j]=i1[ba];
+							i1[j]=i1[ba2];
 						}
 						
 						if(map0[i1[j]][i2[j]].getType() != 3 && map0[i1[j]][i2[j]].getType() != 2){
-							map0[i1[j]][i2[j]] = new Montagne(i1[j],i2[j],b);
+							map0[i1[j]][i2[j]] = new Montagne(i1[j],i2[j],ba);
 							continuer = false;
 						}
 					}
@@ -143,25 +143,25 @@ public class MapGeneration {
 					if(i > 0){
 						if(map0[i-1][i2].getType()==1){
 							if(Util.random(new double[]{20,70})==1)
-								map0[i-1][i2] = new Plage(i-1,i2,b);
+								map0[i-1][i2] = new Plage(i-1,i2,ba);
 						}
 					}
 					if(i < taille-1){
 						if(map0[i+1][i2].getType()==1){
 							if(Util.random(new double[]{20,70})==1)
-								map0[i+1][i2] = new Plage(i+1,i2,b);
+								map0[i+1][i2] = new Plage(i+1,i2,ba);
 						}
 					}
 					if(i2 > 0){
 						if(map0[i][i2-1].getType()==1){
 							if(Util.random(new double[]{20,70})==1)
-								map0[i][i2-1] = new Plage(i,i2-1,b);
+								map0[i][i2-1] = new Plage(i,i2-1,ba);
 						}
 					}
 					if(i2 < taille-1){
 						if(map0[i][i2+1].getType()==1){
 							if(Util.random(new double[]{20,70})==1)
-								map0[i][i2+1] = new Plage(i,i2+1,b);
+								map0[i][i2+1] = new Plage(i,i2+1,ba);
 						}
 					}
 				}
@@ -178,7 +178,7 @@ public class MapGeneration {
 					i1[0] = Util.randomInt(0,taille-1);
 					i2[0] = Util.randomInt(0,taille-1);
 					if(map0[i1[0]][i2[0]].getType() != 3 && map0[i1[0]][i2[0]].getType() != 2){
-						map0[i1[0]][i2[0]] = new Foret(i1[0],i2[0],b);
+						map0[i1[0]][i2[0]] = new Foret(i1[0],i2[0],ba);
 						continuer = false;
 					}
 				}
@@ -186,21 +186,21 @@ public class MapGeneration {
 				for(int j = 1; j < taillem; j++){
 					continuer = true;
 					while(continuer){
-						int ba = Util.randomInt(0,j-1);
+						int ba2 = Util.randomInt(0,j-1);
 						int d = Util.randomInt(0,1);
 						int d2 = (Util.randomInt(0,1)==0?-1:1);
 						if(d == 0){
-							i1[j] = i1[ba] + d2;
+							i1[j] = i1[ba2] + d2;
 							i1[j] = i1[j] < 0?0:i1[j] >= taille?taille-1:i1[j];
-							i2[j]=i2[ba];
+							i2[j]=i2[ba2];
 						}else{
-							i2[j] = i2[ba] + d2;
+							i2[j] = i2[ba2] + d2;
 							i2[j] = i2[j] < 0?0:i2[j] >= taille?taille-1:i2[j];
-							i1[j]=i1[ba];
+							i1[j]=i1[ba2];
 						}
 						
 						if(map0[i1[j]][i2[j]].getType() != 3 && map0[i1[j]][i2[j]].getType() != 2){
-							map0[i1[j]][i2[j]] = new Foret(i1[j],i2[j],b);
+							map0[i1[j]][i2[j]] = new Foret(i1[j],i2[j],ba);
 							continuer = false;
 						}
 					}

@@ -17,6 +17,7 @@ public class Language {
 	private ArrayList<String> info = new ArrayList<String>();
 	private ArrayList<String> date = new ArrayList<String>();
 	private ArrayList<String> warning = new ArrayList<String>();
+	private ArrayList<String> seasons = new ArrayList<String>();
 	
 	protected int PLAINE = 0;
 	protected int FORET = PLAINE+1;
@@ -36,9 +37,7 @@ public class Language {
 		
 		int i;
 		ArrayList<String> temp = new ArrayList<String>();
-		for(String s2:s){
-			System.out.println(s2);
-		}
+		
 		//boutons
 		i = 1;
 		while(!s.get(i).startsWith("--")){
@@ -146,6 +145,12 @@ public class Language {
 			warning.add(s.get(i));
 			i++;
 		}
+		//seasons
+		i++;
+		while(!s.get(i).startsWith("--")){
+			seasons.add(s.get(i));
+			i++;
+		}
 		
 	}
 	
@@ -203,6 +208,10 @@ public class Language {
 
 	public ArrayList<String> getWarning() {
 		return warning;
+	}
+
+	public ArrayList<String> getSeasons() {
+		return seasons;
 	}
 	
 	

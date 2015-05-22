@@ -12,21 +12,21 @@ public class Minimap extends JPanel implements MouseListener{
 
 	private static final long serialVersionUID = 1L;
 	private Map m;
-	private Base b;
+	private Base ba;
 	private int mapType = 0;
 	private int NBMAPTYPE = 2;
 	private boolean map;
 	private boolean selection = true;
 	
-	public Minimap(Base b){
-		this.b = b;
+	public Minimap(Base ba){
+		this.ba = ba;
 		map = true;
 		this.addMouseListener(this);
 	}
 	
-	public Minimap(Base b, Map m){
+	public Minimap(Base ba, Map m){
 		this.m = m;
-		this.b = b;
+		this.ba = ba;
 		map = false;
 		this.addMouseListener(this);
 	}
@@ -34,10 +34,10 @@ public class Minimap extends JPanel implements MouseListener{
 	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D)g;
 		g2.setColor(Color.BLACK);
-		if(map)m = b.getG().getM();
+		if(map)m = ba.getG().getM();
 		g2.fillRect(0,0,this.getWidth()-1,this.getHeight());
 		float t = (float) ((this.getHeight()*60/126)/m.getTaille());
-		for(int i2 = b.getG().getTaille()-1; i2 >= 0; i2--){for(int i = 0; i < b.getG().getTaille(); i++){
+		for(int i2 = ba.getG().getTaille()-1; i2 >= 0; i2--){for(int i = 0; i < ba.getG().getTaille(); i++){
 			int x1 = (int)((this.getHeight()*3/63)+i*t*2+i2*t*2);
 			int y1 = (int)((this.getHeight()/2)+i*t-i2*t);
 			switch(mapType){
@@ -60,12 +60,12 @@ public class Minimap extends JPanel implements MouseListener{
 		}}
 		if(selection){
 			g2.setColor(Color.RED);
-			int x = (int) (t*4.3*(b.getGp().getWidth()/(160*b.getGp().getZoom()/20)));
-			int y = (int) (t*4.3*(b.getGp().getHeight()/(160*b.getGp().getZoom()/20)));
-			int[] xy = {(int) (this.getWidth()/2-x/2-b.getG().getCamX()*t*4.3/(160*b.getGp().getZoom()/20)),
-					(int) (this.getHeight()/2-y/2-b.getG().getCamY()*t*4.3/(160*b.getGp().getZoom()/20)),
-					(int) (this.getWidth()/2-x/2-b.getG().getCamX()*t*4.3/(160*b.getGp().getZoom()/20)+x),
-					(int) (this.getHeight()/2-y/2-b.getG().getCamY()*t*4.3/(160*b.getGp().getZoom()/20)+y)};
+			int x = (int) (t*4.3*(ba.getGp().getWidth()/(160*ba.getGp().getZoom()/20)));
+			int y = (int) (t*4.3*(ba.getGp().getHeight()/(160*ba.getGp().getZoom()/20)));
+			int[] xy = {(int) (this.getWidth()/2-x/2-ba.getG().getCamX()*t*4.3/(160*ba.getGp().getZoom()/20)),
+					(int) (this.getHeight()/2-y/2-ba.getG().getCamY()*t*4.3/(160*ba.getGp().getZoom()/20)),
+					(int) (this.getWidth()/2-x/2-ba.getG().getCamX()*t*4.3/(160*ba.getGp().getZoom()/20)+x),
+					(int) (this.getHeight()/2-y/2-ba.getG().getCamY()*t*4.3/(160*ba.getGp().getZoom()/20)+y)};
 			xy[0]=xy[0]<0?0:xy[0]>this.getWidth()?this.getWidth():xy[0];
 			xy[1]=xy[1]<0?0:xy[1]>this.getHeight()?this.getHeight():xy[1];
 			xy[2]=xy[2]<0?0:xy[2]>this.getWidth()?this.getWidth():xy[2];
@@ -81,11 +81,11 @@ public class Minimap extends JPanel implements MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		if(selection){
 			if(e.getButton() == MouseEvent.BUTTON1){
-				int t = 60/b.getG().getTaille();
+				int t = 60/ba.getG().getTaille();
 				int x = -(e.getX()-(this.getWidth()-141));
 				int y = -(e.getY()-75);
-				b.getG().setCamX((int) (x*(160*b.getGp().getZoom()/20)/(t*4.3)));
-				b.getG().setCamY((int) (y*(160*b.getGp().getZoom()/20)/(t*4.3)));
+				ba.getG().setCamX((int) (x*(160*ba.getGp().getZoom()/20)/(t*4.3)));
+				ba.getG().setCamY((int) (y*(160*ba.getGp().getZoom()/20)/(t*4.3)));
 			}
 			if(e.getButton() == MouseEvent.BUTTON3){
 				mapType++;

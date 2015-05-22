@@ -13,8 +13,8 @@ public class Panel extends JPanel{
 	
 	private BufferedImage fond;
 	
-	public Panel(Base g){
-		fond = g.getTl().getConstantImage(4);
+	public Panel(Base ba){
+		fond = ba.getTl().getConstantImage(4);
 	}
 	
 	public void paintComponent(Graphics g){

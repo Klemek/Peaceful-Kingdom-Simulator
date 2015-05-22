@@ -10,8 +10,8 @@ public class Foret extends Terrain {
 	private static int FRAMES = 1;
 	private int nba;
 	
-	public Foret(int x, int y, Base g){
-		super(x,y,0,FRAMES,0,5,g.getlang().getNoms().get(g.getlang().FORET),g);
+	public Foret(int x, int y, Base ba){
+		super(x,y,0,FRAMES,0,5,ba.getlang().getNoms().get(ba.getlang().FORET),ba);
 		nba = Util.randomInt(400,700);
 		details = new LinkedList<Detail>();
 		for(int i = 0; i < nba/10; i++){
@@ -30,7 +30,7 @@ public class Foret extends Terrain {
 
 	@Override
 	public String[] getInfo2() {
-		return new String[]{ga.getlang().getDesc().get(ga.getlang().FORET).get(0)+" "+(ga.getOpt().langue==0?Util.nbeng(nba):Util.nbfra(nba)).toLowerCase()+" "+ga.getlang().getDesc().get(ga.getlang().FORET).get(1)+"."};
+		return new String[]{ba.getlang().getDesc().get(ba.getlang().FORET).get(0)+" "+(ba.getOpt().langue==0?Util.nbeng(nba):Util.nbfra(nba)).toLowerCase()+" "+ba.getlang().getDesc().get(ba.getlang().FORET).get(1)+"."};
 	}
 
 

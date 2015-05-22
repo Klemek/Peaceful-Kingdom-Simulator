@@ -25,10 +25,10 @@ public class Bucheron extends Construction implements ActionListener {
 	
 	private boolean warning = false;
 	
-	public Bucheron(int x, int y, Base g){
+	public Bucheron(int x, int y, Base ba){
 		//TODO
-		super(x,y,2,FRAMES,0,1,0,g.getlang().getNoms().get(g.getlang().BUCHERON),MAXSTATE,new int[]{3,7,14},new int[]{20,0,0},g);
-		b = new Button(g.getlang().getBouton().get(6),g);
+		super(x,y,2,FRAMES,0,1,0,ba.getlang().getNoms().get(ba.getlang().BUCHERON),MAXSTATE,new int[]{3,7,14},new int[]{20,0,0},ba);
+		b = new Button(ba.getlang().getBouton().get(6),ba);
 		b.addActionListener(this);
 		b.setPreferredSize(new Dimension(120,30));
 		b.enable(false);

@@ -13,27 +13,27 @@ public class PopUpPanel extends Panel implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	
-	private Base ga;
+	private Base ba;
 	private Dimension b = new Dimension(90,30);
 	
 	private int taillex = 360;
 	private int tailley = 140;
 	
-	public PopUpPanel(Base g,String title, String[] texte, String sb1, String sb2, ActionListener al, ActionListener al2) {
-		super(g);
-		this.ga = g;
+	public PopUpPanel(Base ba,String title, String[] texte, String sb1, String sb2, ActionListener al, ActionListener al2) {
+		super(ba);
+		this.ba = ba;
 		this.setLayout(new BorderLayout());
 		
 		JLabel jtitle = new JLabel(title);
 		jtitle.setForeground(Color.BLACK);
-		jtitle.setFont(g.getF().deriveFont(Font.PLAIN,40));
+		jtitle.setFont(ba.getF().deriveFont(Font.PLAIN,40));
 
-		Button b1 = new Button(sb1,g);
+		Button b1 = new Button(sb1,ba);
 		b1.setPreferredSize(b);
 		b1.addActionListener(this);
 		b1.addActionListener(al);
 		
-		Button b2 = new Button(sb2,g);	
+		Button b2 = new Button(sb2,ba);	
 		b2.setPreferredSize(b);
 		b2.addActionListener(this);
 		b2.addActionListener(al2);
@@ -50,7 +50,7 @@ public class PopUpPanel extends Panel implements ActionListener{
 		for(String s1: texte){
 			JLabel jl = new JLabel(s1);
 			jl.setForeground(Color.BLACK);
-			jl.setFont(g.getF().deriveFont(Font.PLAIN,20));
+			jl.setFont(ba.getF().deriveFont(Font.PLAIN,20));
 			c.add(jl);
 		}
 		
@@ -61,19 +61,19 @@ public class PopUpPanel extends Panel implements ActionListener{
 		this.add(c,BorderLayout.CENTER);
 		this.add(s,BorderLayout.SOUTH);
 
-		this.setBounds((ga.getWidth()-taillex)/2,(ga.getGp().getHeight()-tailley)/2,taillex,tailley);
+		this.setBounds((ba.getWidth()-taillex)/2,(ba.getGp().getHeight()-tailley)/2,taillex,tailley);
 	}
 	
-	public PopUpPanel(Base g,String title, String[] texte, String sb1, ActionListener al) {
-		super(g);
-		this.ga = g;
+	public PopUpPanel(Base ba,String title, String[] texte, String sb1, ActionListener al) {
+		super(ba);
+		this.ba = ba;
 		this.setLayout(new BorderLayout());
 		
 		JLabel jtitle = new JLabel(title);
 		jtitle.setForeground(Color.BLACK);
-		jtitle.setFont(g.getF().deriveFont(Font.PLAIN,40));
+		jtitle.setFont(ba.getF().deriveFont(Font.PLAIN,40));
 
-		Button b1 = new Button(sb1,g);
+		Button b1 = new Button(sb1,ba);
 		b1.setPreferredSize(b);
 		b1.addActionListener(this);
 		b1.addActionListener(al);
@@ -90,7 +90,7 @@ public class PopUpPanel extends Panel implements ActionListener{
 		for(String s1: texte){
 			JLabel jl = new JLabel(s1);
 			jl.setForeground(Color.BLACK);
-			jl.setFont(g.getF().deriveFont(Font.PLAIN,20));
+			jl.setFont(ba.getF().deriveFont(Font.PLAIN,20));
 			c.add(jl);
 		}
 		
@@ -100,16 +100,17 @@ public class PopUpPanel extends Panel implements ActionListener{
 		this.add(c,BorderLayout.CENTER);
 		this.add(s,BorderLayout.SOUTH);
 
-		this.setBounds((ga.getWidth()-360)/2,(ga.getHeight()-(ga.getOpt().interfSize[1]+ga.getOpt().interfSize[0])-140)/2,360,140);
+		this.setBounds((ba.getWidth()-360)/2,(ba.getHeight()-(ba.getOpt().interfSize[1]+ba.getOpt().interfSize[0])-140)/2,360,140);
 	}
 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		this.getParent().remove(this);
-		if(ga.hasGame()){
-			ga.getG().getTick().start();
-			ga.cleanGP();
+		if(ba.hasGame()){
+			//ga.getG().getTick().start();
+			ba.resumeG();
+			ba.cleanGP();
 		}
 		
 	}

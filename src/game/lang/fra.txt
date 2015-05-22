@@ -27,6 +27,7 @@ Taille
 Plein écran
 Details
 Animations
+Afficher les FPS
 Langue
 *Population
 Population totale
@@ -107,4 +108,9 @@ Dec
 Attention
 Voulez-vous vraiment détruire
 Cette action est irreversible
+--seasons--
+Le printemps est arrivé
+L'été est arrivé
+L'automne est arrivé
+L'Hiver est arrive
 --

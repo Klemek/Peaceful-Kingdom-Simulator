@@ -15,19 +15,19 @@ public class Ville extends Construction implements ActionListener{
 	private static final long serialVersionUID = 5664275669241443636L;
 	
 	private transient JLabel pop;
-	private transient Button b;
+	private transient Button bu;
 	
 	private int[] population = {12,24,36};
 	
 	private static int FRAMES = 1;
 	private static int MAXSTATE = 3;
 	
-	public Ville(int x, int y, Base g){
-		super(x,y,1,FRAMES,0,1,1,g.getlang().getNoms().get(g.getlang().VILLE),MAXSTATE,new int[]{15,30,45},new int[]{100,0,0},g);
-		b = new Button(g.getlang().getBouton().get(6),g);
-		b.addActionListener(this);
-		b.setPreferredSize(new Dimension(120,30));
-		b.enable(false);
+	public Ville(int x, int y, Base b){
+		super(x,y,1,FRAMES,0,1,1,b.getlang().getNoms().get(b.getlang().VILLE),MAXSTATE,new int[]{15,30,45},new int[]{100,0,0},b);
+		bu = new Button(b.getlang().getBouton().get(6),b);
+		bu.addActionListener(this);
+		bu.setPreferredSize(new Dimension(120,30));
+		bu.enable(false);
 	}
 	
 	public boolean estPlacable(int x, int y){
@@ -43,7 +43,7 @@ public class Ville extends Construction implements ActionListener{
 	public void openGui() {
 		pop.setForeground(Color.BLACK);
 		pop.setFont(ba.getF().deriveFont(Font.PLAIN,30));
-		ba.openInfo(ba.getlang().getNoms().get(ba.getlang().VILLE),new Component[]{pop,b},120);
+		ba.openInfo(ba.getlang().getNoms().get(ba.getlang().VILLE),new Component[]{pop,bu},120);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class Ville extends Construction implements ActionListener{
 	public void weekCheck() {
 		if(!pourcent){
 			if(this.state != this.maxstate-1){
-				b.enable(true);
+				bu.enable(true);
 			}
 		}
 		
@@ -87,7 +87,7 @@ public class Ville extends Construction implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		
-		if(arg0.getSource() == b){
+		if(arg0.getSource() == bu){
 			if(!pourcent){
 				if(this.state != this.maxstate-1){
 					this.state++;
@@ -121,7 +121,7 @@ public class Ville extends Construction implements ActionListener{
 					reinitTemps();
 					p = 0;
 					disabled = true;
-					b.enable(false);
+					bu.enable(false);
 				}
 				
 			}
@@ -151,7 +151,7 @@ public class Ville extends Construction implements ActionListener{
 
 	@Override
 	public void internInit() {
-		b = new Button(ba.getlang().getBouton().get(6),ba);
+		bu = new Button(ba.getlang().getBouton().get(6),ba);
 		pop = new JLabel(ba.getlang().getGui().get(ba.getlang().VILLEGUI).get(0)+" : "+Util.somme(population,0,state));
 	}
 

@@ -9,7 +9,7 @@ public abstract class Terrain implements Serializable{
 	private static final long serialVersionUID = 479633741036970028L;
 	
 	//jeu
-	protected transient Base ga;
+	protected transient Base ba;
 	protected int coord[];
 	//visuel
 	protected int h;
@@ -31,27 +31,27 @@ public abstract class Terrain implements Serializable{
 	public abstract String[] getInfo2();
 	public abstract Color getPColor();
 	
-	public Terrain(int x, int y, int t, int frames, int h, int type, String types, Base g){
+	public Terrain(int x, int y, int t, int frames, int h, int type, String types, Base b){
 		this.coord = new int[]{x,y};
 		this.h = h;
 		this.type = type;
 		this.types = types;
-		this.ga = g;
+		this.ba = b;
 		this.t = t;
 		this.frames = frames;
 		
 	}
 	
 	public void init(Base b){
-		this.ga = b;
+		this.ba = b;
 	}
 	
-	public Terrain(int x, int y, int t, int frames, int t2, int dframes, int h, int type, String types, Base g){
+	public Terrain(int x, int y, int t, int frames, int t2, int dframes, int h, int type, String types, Base b){
 		this.coord = new int[]{x,y};
 		this.h = h;
 		this.type = type;
 		this.types = types;
-		this.ga = g;
+		this.ba = b;
 		this.t = t;
 		this.frames = frames;
 		this.t2 = t2;

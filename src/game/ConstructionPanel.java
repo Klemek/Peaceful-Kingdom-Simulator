@@ -19,7 +19,7 @@ public class ConstructionPanel extends Panel implements ActionListener, MouseLis
 
 	private static final long serialVersionUID = 1L;
 
-	private Base ga;
+	private Base ba;
 	private JLabel title;
 	private Dimension b = new Dimension(120,30);
 	private Dimension b2 = new Dimension(30,30);
@@ -45,19 +45,19 @@ public class ConstructionPanel extends Panel implements ActionListener, MouseLis
 	private boolean sel = false;
 	private int selection = 0;
 	
-	public ConstructionPanel(Base g) {
-		super(g);
-		this.ga = g;
-		title = new JLabel(ga.getlang().getMenu().get(3));
-		liste = g.getG().getListe();
-		liste2 = g.getG().getListe2();
-		fond = g.getTl().getConstantImage(4);
-		preview = g.getTl().getConstantImage(5);
-		ressources = g.getTl().getConstantImage(6);
-		f = g.getF();
-		this.terrain = ga.getTl().getLot(ga.getTl().TERRAIN)[0];
-		this.construction = ga.getTl().getLot(ga.getTl().CONSTRUCTION1)[0];
-		this.details = ga.getTl().getLot(ga.getTl().DETAILS)[0];
+	public ConstructionPanel(Base ba) {
+		super(ba);
+		this.ba = ba;
+		title = new JLabel(ba.getlang().getMenu().get(3));
+		liste = ba.getG().getListe();
+		liste2 = ba.getG().getListe2();
+		fond = ba.getTl().getConstantImage(4);
+		preview = ba.getTl().getConstantImage(5);
+		ressources = ba.getTl().getConstantImage(6);
+		f = ba.getF();
+		this.terrain = ba.getTl().getLot(ba.getTl().TERRAIN)[0];
+		this.construction = ba.getTl().getLot(ba.getTl().CONSTRUCTION1)[0];
+		this.details = ba.getTl().getLot(ba.getTl().DETAILS)[0];
 		this.setLayout(new BorderLayout());
 		
 		JPanel n = new JPanel();
@@ -72,27 +72,27 @@ public class ConstructionPanel extends Panel implements ActionListener, MouseLis
 		title.setFont(f.deriveFont(Font.PLAIN,40));	
 		n.add(title);
 		//TODO mutli page
-		gauche = new Button(9,g);
+		gauche = new Button(9,ba);
 		gauche.enable(false);
 		gauche.setPreferredSize(b2);
 		gauche.addActionListener(this);
 		s.add(gauche);
-		construire = new Button(ga.getlang().getBouton().get(8),g);
+		construire = new Button(ba.getlang().getBouton().get(8),ba);
 		construire.enable(false);
 		construire.setPreferredSize(b);
 		construire.addActionListener(this);
 		s.add(construire);
-		retour = new Button(ga.getlang().getBouton().get(7),g);
+		retour = new Button(ba.getlang().getBouton().get(7),ba);
 		retour.setPreferredSize(b);
 		retour.addActionListener(this);
 		s.add(retour);
-		droite = new Button(10,g);
+		droite = new Button(10,ba);
 		droite.enable(false);
 		droite.setPreferredSize(b2);
 		droite.addActionListener(this);
 		s.add(droite);
 		
-		this.setBounds((ga.getWidth()-taillex)/2,(ga.getGp().getHeight()-tailley)/2,taillex,tailley);
+		this.setBounds((ba.getWidth()-taillex)/2,(ba.getGp().getHeight()-tailley)/2,taillex,tailley);
 		
 		this.add(n,BorderLayout.NORTH);
 		this.add(c,BorderLayout.CENTER);
@@ -105,15 +105,16 @@ public class ConstructionPanel extends Panel implements ActionListener, MouseLis
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == retour){
 			this.getParent().remove(this);
-			ga.cleanGP();
-			ga.getG().getTick().start();
+			ba.cleanGP();
+
 		}
 		if(e.getSource() == construire){
-			ga.getG().setSelstate(1);
-			ga.getG().setChoix(selection);
+			ba.getG().setSelstate(1);
+			ba.getG().setChoix(selection);
 			this.getParent().remove(this);
-			ga.cleanGP();
-			ga.getG().getTick().start();
+			ba.cleanGP();
+
+			ba.resumeG();
 		}
 	}
 	
@@ -122,7 +123,7 @@ public class ConstructionPanel extends Panel implements ActionListener, MouseLis
 		Graphics2D g2 = (Graphics2D)g;
 		int i = fond.getHeight()/3;
 		
-		construire.enable((sel && liste[selection].hasRessources(ga.getG())));
+		construire.enable((sel && liste[selection].hasRessources(ba.getG())));
 		
 		int lignes = liste.length/3;
 		int fin = liste.length-lignes*3;
@@ -197,7 +198,7 @@ public class ConstructionPanel extends Panel implements ActionListener, MouseLis
 					for(int l = 0; l < k; l++){
 						w2 += tw[l];
 					}
-					g2.setColor(liste[j].hasRessources(ga.getG(),k)?Color.BLACK:Color.RED);
+					g2.setColor(liste[j].hasRessources(ba.getG(),k)?Color.BLACK:Color.RED);
 					g2.drawImage(ressources,(esp*(x+1))+(t*x)+(t-w)/2+5+w2,deb+(esp*y)+(t2*y)+preview.getHeight()-20,(esp*(x+1))+(t*x)+(t-w)/2+20+w2,deb+(esp*y)+(t2*y)+preview.getHeight()-5,k*ressources.getHeight(),0,k*ressources.getHeight()+ressources.getHeight(),ressources.getHeight(),this);
 					g2.drawString(""+liste[j].getPrix()[k],(esp*(x+1))+(t*x)+(t-w)/2+25+w2,deb+(esp*y)+(t2*y)+preview.getHeight()-7);
 

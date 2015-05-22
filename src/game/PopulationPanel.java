@@ -104,7 +104,8 @@ public class PopulationPanel extends Panel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == retour){
 			this.getParent().remove(this);
-			ga.getG().getTick().start();
+
+			ga.resumeG();
 		}
 		
 	}

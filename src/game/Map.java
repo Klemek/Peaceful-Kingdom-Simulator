@@ -9,28 +9,28 @@ public class Map implements Serializable{
 	private Terrain map0[][];
 	private Construction map1[][];
 	private int taille;
-	private transient Base b;
+	private transient Base ba;
 	
-	public Map(Base b){
-		this.b = b;
+	public Map(Base ba){
+		this.ba = ba;
 	}
 
-	public void init(Base b){
-		this.b = b;
+	public void init(Base ba){
+		this.ba = ba;
 		for(Terrain[] t1:map0){
 			for(Terrain t2:t1){
-				t2.init(b);
+				t2.init(ba);
 			}
 		}
 		for(Construction[] c1:map1){
 			for(Construction c2:c1){
-				if(c2 != null)c2.init(b);;
+				if(c2 != null)c2.init(ba);;
 			}
 		}
 	}
 	
 	public void generate(int taille){
-		map0 = new MapGeneration().generate(taille,b);
+		map0 = new MapGeneration().generate(taille,ba);
 		map1 = new Construction[taille][taille];
 		this.taille = taille;
 	}

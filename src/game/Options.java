@@ -12,12 +12,12 @@ public class Options implements Serializable{
 	public int[][] TAILLES = {{900,600},{1024,768},{1280,720},{1280,800},{1280,1024},{1360,768},{1440,900},};
 	
 	private int DEFAUTSIZESEL = 0;
-	private int[] DEFAUTINTERFSIZE = {150,35};
-	private boolean DEFAUTFULLSCREEN = false;
-	private boolean DEFAUTDETAILS = true;
-	private boolean DEFAUTANIMATIONS = true;
-	
-	private int DEFAUTLANGUE = 0;
+	private  int[] DEFAUTINTERFSIZE = {150,35};
+	private  boolean DEFAUTFULLSCREEN = false;
+	private  boolean DEFAUTDETAILS = true;
+	private  boolean DEFAUTANIMATIONS = true;
+	private  boolean DEFAUTFPS= false;
+	private  int DEFAUTLANGUE = 0;
 	
 	public int[] size;
 	public int sizeSel;
@@ -25,6 +25,7 @@ public class Options implements Serializable{
 	public boolean fullscreen;
 	public boolean details;
 	public boolean animations;
+	public boolean fps;
 	
 	public int langue;
 	
@@ -34,13 +35,7 @@ public class Options implements Serializable{
 	//TODO attribution automatique des metiers et minimum d'ouvriers
 	
 	public Options(){ 
-		sizeSel = DEFAUTSIZESEL;
-		size = TAILLES[sizeSel];
-		interfSize = DEFAUTINTERFSIZE;
-		fullscreen = DEFAUTFULLSCREEN;
-		details = DEFAUTDETAILS;
-		animations = DEFAUTANIMATIONS;
-		langue = DEFAUTLANGUE;
+		setDefaut();
 	}
 	
 	public void setDefaut(){
@@ -50,6 +45,7 @@ public class Options implements Serializable{
 		fullscreen = DEFAUTFULLSCREEN;
 		details = DEFAUTDETAILS;
 		animations = DEFAUTANIMATIONS;
+		fps = DEFAUTFPS;
 		langue = DEFAUTLANGUE;
 	}
 	

@@ -24,9 +24,9 @@ public class Mine extends Construction implements ActionListener {
 	
 	
 	
-	public Mine(int x, int y, Base g){
-		super(x,y,3,FRAMES,0,2,0,g.getlang().getNoms().get(g.getlang().MINE),MAXSTATE,new int[]{7,15,30},new int[]{80,0,0},g);
-		b = new Button(g.getlang().getBouton().get(6),g);
+	public Mine(int x, int y, Base ba){
+		super(x,y,3,FRAMES,0,2,0,ba.getlang().getNoms().get(ba.getlang().MINE),MAXSTATE,new int[]{7,15,30},new int[]{80,0,0},ba);
+		b = new Button(ba.getlang().getBouton().get(6),ba);
 		b.addActionListener(this);
 		b.setPreferredSize(new Dimension(120,30));
 		b.enable(false);

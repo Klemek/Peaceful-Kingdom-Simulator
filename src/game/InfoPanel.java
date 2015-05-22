@@ -8,16 +8,14 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-public class InfoPanel extends JPanel implements ActionListener, MouseListener{
+public class InfoPanel extends JPanel implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
-	private Base ga;
+	private Base ba;
 	private BufferedImage[][] terrain;
 	private BufferedImage[][] details;
 	private BufferedImage[][] construction;
@@ -50,14 +48,14 @@ public class InfoPanel extends JPanel implements ActionListener, MouseListener{
 		return b3;
 	}
 
-	public InfoPanel(Base arg0){
-		ga = arg0;
-		this.f = arg0.getF().deriveFont(Font.PLAIN,20);
-		this.f2 = arg0.getF().deriveFont(Font.PLAIN,40);
-		this.terrain = ga.getTl().getLot(ga.getTl().TERRAIN);
-		this.details = ga.getTl().getLot(ga.getTl().DETAILS);
-		this.construction = ga.getTl().getLot(ga.getTl().CONSTRUCTION2);
-		this.constructionGris = ga.getTl().getLot(ga.getTl().CONSTRUCTION1);
+	public InfoPanel(Base ba){
+		this.ba = ba;
+		this.f = ba.getF().deriveFont(Font.PLAIN,20);
+		this.f2 = ba.getF().deriveFont(Font.PLAIN,40);
+		this.terrain = ba.getTl().getLot(ba.getTl().TERRAIN);
+		this.details = ba.getTl().getLot(ba.getTl().DETAILS);
+		this.construction = ba.getTl().getLot(ba.getTl().CONSTRUCTION2);
+		this.constructionGris = ba.getTl().getLot(ba.getTl().CONSTRUCTION1);
 		for(int j = 0; j < constructionGris.length; j++){
 			for(int i = 0; i < constructionGris[j].length; i++){
 				constructionGris[j][i] = change(constructionGris[j][i],false,false,true);
@@ -65,14 +63,14 @@ public class InfoPanel extends JPanel implements ActionListener, MouseListener{
 		}
 		
 		
-		this.pourcent = ga.getTl().getConstantImage(0);
-		this.alertes = ga.getTl().getConstantImage(7);
-		nbalertes = ga.getTl().getConstantsImagesTaille(7);
-		this.fond = ga.getTl().getConstantImage(3);
+		this.pourcent = ba.getTl().getConstantImage(0);
+		this.alertes = ba.getTl().getConstantImage(7);
+		nbalertes = ba.getTl().getConstantsImagesTaille(7);
+		this.fond = ba.getTl().getConstantImage(3);
 		
-		b1 = new Button(ga.getlang().getBouton().get(12),ga);
-		b2 = new Button(ga.getlang().getBouton().get(8),ga);
-		b3 = new Button(ga.getlang().getBouton().get(13),ga);
+		b1 = new Button(ba.getlang().getBouton().get(12),ba);
+		b2 = new Button(ba.getlang().getBouton().get(8),ba);
+		b3 = new Button(ba.getlang().getBouton().get(13),ba);
 		
 		b1.addActionListener(this);
 		b2.addActionListener(this);
@@ -83,23 +81,22 @@ public class InfoPanel extends JPanel implements ActionListener, MouseListener{
 		b1p.setLayout(new BorderLayout());
 		b1p.add(b1,BorderLayout.CENTER);
 		this.add(b1p,null);
-		b1p.setBounds(ga.getOpt().size[0]-460,15,180,30);//430+(ga.getOpt().size[0]-880)/2
+		b1p.setBounds(ba.getOpt().size[0]-460,15,180,30);//430+(ga.getOpt().size[0]-880)/2
 		
 		
 		b2p.setLayout(new BorderLayout());
 		b2p.add(b2,BorderLayout.CENTER);
 		this.add(b2p,null);
-		b2p.setBounds(ga.getOpt().size[0]-460,60,180,30);
+		b2p.setBounds(ba.getOpt().size[0]-460,60,180,30);
 		
 		b3p.setLayout(new BorderLayout());
 		b3p.add(b3,BorderLayout.CENTER);
 		this.add(b3p,null);
-		b3p.setBounds(ga.getOpt().size[0]-460,105,180,30);
-	
-		mm = new Minimap(ga);
+		b3p.setBounds(ba.getOpt().size[0]-460,105,180,30);
+		
+		mm = new Minimap(ba);
 		this.add(mm,null);
-		mm.setBounds(ga.getOpt().size[0]-268,12,256,126);
-		this.addMouseListener(this);
+		mm.setBounds(ba.getOpt().size[0]-258,12,257,126);
 		
 		this.add(ni,null);
 		ni.setVisible(false);
@@ -132,11 +129,11 @@ public class InfoPanel extends JPanel implements ActionListener, MouseListener{
 		g2.drawImage(fond,0,0,fond.getWidth()/100*49,this.getHeight(),0,fond.getHeight()/37*7,fond.getWidth()/100*49,fond.getHeight(),this);
 		g2.drawImage(fond,fond.getWidth()/100*49,0,this.getWidth()-(fond.getWidth()/100*31),this.getHeight(),fond.getWidth()/100*49,fond.getHeight()/37*7,fond.getWidth()-(fond.getWidth()/100*31),fond.getHeight(),this);
 		g2.drawImage(fond,this.getWidth()-(fond.getWidth()/100*31),0,this.getWidth(),this.getHeight(),fond.getWidth()-(fond.getWidth()/100*31),fond.getHeight()/37*7,fond.getWidth(),fond.getHeight(),this);
-		if(ga.getG().hasSelected()){
+		if(ba.getG().hasSelected()){
 			//Visualisation
-			if(ga.getG().getSelected()[0] != -1 && ga.getG().getSelected()[1] != -1){
-				Terrain t = ga.getG().getM().getMap0()[ga.getG().getSelected()[0]][ga.getG().getSelected()[1]];
-				Construction c = ga.getG().getM().getMap1()[ga.getG().getSelected()[0]][ga.getG().getSelected()[1]];
+			if(ba.getG().getSelected()[0] != -1 && ba.getG().getSelected()[1] != -1){
+				Terrain t = ba.getG().getM().getMap0()[ba.getG().getSelected()[0]][ba.getG().getSelected()[1]];
+				Construction c = ba.getG().getM().getMap1()[ba.getG().getSelected()[0]][ba.getG().getSelected()[1]];
 				drawTerrain(t.getTexture(),0,t.getAnim(),18,18,g2,112,0,1,false);
 				if(t.getDetails() != null){
 					for(Detail d: t.getDetails()){
@@ -187,18 +184,18 @@ public class InfoPanel extends JPanel implements ActionListener, MouseListener{
 	public void drawDetail(int t, int ap, int nb, double x, double y ,int taille,  Graphics2D g2){
 		int x1 = Util.arrondi(18+(((1-x)/2)+(y/2))*112);
 		int y1 = Util.arrondi(50+((x/2)+(y/2))*56);
-		g2.drawImage(details[ga.getG().getSaison()][t],x1,y1,x1+taille,y1+taille,ap*(details[ga.getG().getSaison()][t].getWidth()/nb),0,(ap+1)*(details[ga.getG().getSaison()][t].getWidth()/nb),details[ga.getG().getSaison()][t].getHeight(),this);
+		g2.drawImage(details[ba.getG().getSaison()][t],x1,y1,x1+taille,y1+taille,ap*(details[ba.getG().getSaison()][t].getWidth()/nb),0,(ap+1)*(details[ba.getG().getSaison()][t].getWidth()/nb),details[ba.getG().getSaison()][t].getHeight(),this);
 	}
 	
 	public void drawTerrain(int t, int img, int anim, int x, int y,Graphics2D g2,int taille, int state, int maxstate, boolean g){
 		BufferedImage[] i = null;
 		switch(img){
 			case 0:
-				i = terrain[ga.getG().getSaison()];
+				i = terrain[ba.getG().getSaison()];
 				break;
 			case 1:
-				if(g)i = constructionGris[ga.getG().getSaison()];
-				else i = construction[ga.getG().getSaison()];					
+				if(g)i = constructionGris[ba.getG().getSaison()];
+				else i = construction[ba.getG().getSaison()];					
 		}
 		int he = i[t].getHeight()/maxstate;
 		g2.drawImage(i[t],x,y,x+taille,y+taille,anim*he,state*he,anim*he+he,state*he+he,this);
@@ -225,7 +222,7 @@ public class InfoPanel extends JPanel implements ActionListener, MouseListener{
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		ga.actionPerformed(arg0);
+		ba.actionPerformed(arg0);
 		
 	}
 	
@@ -265,36 +262,4 @@ public class InfoPanel extends JPanel implements ActionListener, MouseListener{
 	    }
 		return img;
 	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		/*
-		if(e.getX()>this.getWidth()-268 && e.getX()<this.getWidth()-12 && e.getY()>12 && e.getY()<138){
-			if(e.getButton() == MouseEvent.BUTTON1){
-				int t = 60/ga.getG().getTaille();
-				int x = -(e.getX()-(this.getWidth()-141));
-				int y = -(e.getY()-75);
-				ga.getG().setCamX((int) (x*(160*ga.getGp().getZoom()/20)/(t*4.3)));
-				ga.getG().setCamY((int) (y*(160*ga.getGp().getZoom()/20)/(t*4.3)));
-			}
-			if(e.getButton() == MouseEvent.BUTTON3){
-				mapType++;
-				if(mapType == NBMAPTYPE)mapType=0;
-			}
-		}
-		*/
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {}
-
 }

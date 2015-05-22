@@ -9,13 +9,13 @@ public class Montagne extends Terrain{
 	private static int FRAMES = 1;
 	private static int DFRAMES = 1;
 	
-	public Montagne(int x, int y, Base g){
-		super(x,y,2,FRAMES,0,DFRAMES,0,3,g.getlang().getNoms().get(g.getlang().MONTAGNE),g);
+	public Montagne(int x, int y, Base ba){
+		super(x,y,2,FRAMES,0,DFRAMES,0,3,ba.getlang().getNoms().get(ba.getlang().MONTAGNE),ba);
 	}
 
 	@Override
 	public String[] getInfo2() {
-		String s[] = {ga.getlang().getDesc().get(ga.getlang().MONTAGNE).get(0)};
+		String s[] = {ba.getlang().getDesc().get(ba.getlang().MONTAGNE).get(0)};
 		return s;
 	}
 

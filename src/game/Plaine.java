@@ -10,8 +10,8 @@ public class Plaine extends Terrain{
 	private static int FRAMES = 1;
 	private int nba;
 	
-	public Plaine(int x, int y, Base g){
-		super(x,y,0,FRAMES,0,1,g.getlang().getNoms().get(g.getlang().PLAINE),g);
+	public Plaine(int x, int y, Base ba){
+		super(x,y,0,FRAMES,0,1,ba.getlang().getNoms().get(ba.getlang().PLAINE),ba);
 		
 		details = new LinkedList<Detail>();
 		for(int i = 0; i < Util.randomInt(5,15); i++){
@@ -22,7 +22,7 @@ public class Plaine extends Terrain{
 				if(x1 > 0.90D || x1 < 0.10D)c = true;
 				double y1 = Math.random();
 				if(y1 > 0.90D || y1 < 0.10D)c = true;
-				details.add(new Herbe(x1,y1));
+				if(!c)details.add(new Herbe(x1,y1));
 			}
 		}
 		nba = Util.random(new double[]{70,20,8,2});
@@ -39,8 +39,8 @@ public class Plaine extends Terrain{
 		}
 	}
 	
-	public Plaine(int x, int y, boolean b,  Base g){
-		super(x,y,0,FRAMES,0,1,g.getlang().getNoms().get(g.getlang().PLAINE),g);
+	public Plaine(int x, int y, boolean b,  Base ba){
+		super(x,y,0,FRAMES,0,1,ba.getlang().getNoms().get(ba.getlang().PLAINE),ba);
 		if(b){
 			details = new LinkedList<Detail>();
 			for(int i = 0; i < Util.randomInt(5,15); i++){
@@ -51,7 +51,7 @@ public class Plaine extends Terrain{
 					if(x1 > 0.90D || x1 < 0.10D)c = true;
 					double y1 = Math.random();
 					if(y1 > 0.90D || y1 < 0.10D)c = true;
-					details.add(new Herbe(x1,y1));
+					if(!c)details.add(new Herbe(x1,y1));
 				}
 			}
 			nba = Util.random(new double[]{70,20,8,2});
@@ -72,7 +72,7 @@ public class Plaine extends Terrain{
 
 	@Override
 	public String[] getInfo2() {
-		return new String[]{ga.getlang().getDesc().get(ga.getlang().PLAINE).get(0)+(nba>0?" "+ga.getlang().getDesc().get(ga.getlang().PLAINE).get(1)+" "+(ga.getOpt().langue==0?Util.nbeng(nba):Util.nbfra(nba)).toLowerCase()+" "+ga.getlang().getDesc().get(ga.getlang().PLAINE).get(2)+(nba == 1?".":"."):".")};
+		return new String[]{ba.getlang().getDesc().get(ba.getlang().PLAINE).get(0)+(nba>0?" "+ba.getlang().getDesc().get(ba.getlang().PLAINE).get(1)+" "+(ba.getOpt().langue==0?Util.nbeng(nba):Util.nbfra(nba)).toLowerCase()+" "+ba.getlang().getDesc().get(ba.getlang().PLAINE).get(2)+(nba == 1?".":"."):".")};
 	}
 
 	@Override

@@ -14,16 +14,16 @@ public class Info3Panel extends Panel implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	
-	private Base ga;
+	private Base ba;
 	private JLabel title;
 	private Dimension b = new Dimension(120,30);
 	private Button fermer;
 	private int taillex = 360;
 	
-	public Info3Panel(Base g,String t, Component[] comps, int tailley) {
-		super(g);
-		this.ga = g;
-		title = new JLabel("  "+g.getlang().getMenu().get(5)+"  ");
+	public Info3Panel(Base ba,String t, Component[] comps, int tailley) {
+		super(ba);
+		this.ba = ba;
+		title = new JLabel("  "+ba.getlang().getMenu().get(5)+"  ");
 		this.setLayout(new BorderLayout());
 		
 		JPanel n = new JPanel();
@@ -36,8 +36,8 @@ public class Info3Panel extends Panel implements ActionListener{
 		
 		title.setText(t);
 		title.setForeground(Color.BLACK);
-		title.setFont(g.getF().deriveFont(Font.PLAIN,40));	
-		fermer = new Button(g.getlang().getBouton().get(11),g);
+		title.setFont(ba.getF().deriveFont(Font.PLAIN,40));	
+		fermer = new Button(ba.getlang().getBouton().get(11),ba);
 		fermer.setPreferredSize(b);
 		fermer.addActionListener(this);
 		n.add(title);
@@ -45,7 +45,7 @@ public class Info3Panel extends Panel implements ActionListener{
 			c.add(comps[i]);
 		}
 		s.add(fermer);
-		this.setBounds((ga.getWidth()-taillex)/2,(ga.getGp().getHeight()-tailley)/2,taillex,tailley);
+		this.setBounds((ba.getWidth()-taillex)/2,(ba.getGp().getHeight()-tailley)/2,taillex,tailley);
 	
 		this.add(n,BorderLayout.NORTH);
 		this.add(c,BorderLayout.CENTER);
@@ -56,7 +56,7 @@ public class Info3Panel extends Panel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == fermer){
 			this.getParent().remove(this);
-			ga.cleanGP();
+			ba.cleanGP();
 		}
 	}
 

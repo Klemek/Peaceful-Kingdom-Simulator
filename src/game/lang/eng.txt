@@ -27,6 +27,7 @@ Size
 Full screen
 Details
 Animations
+Show FPS
 Language
 *Population
 Total population
@@ -107,4 +108,9 @@ Dec
 Warning
 Do you realy want to destroy
 This can't be undone
+--seasons--
+Spring has come
+Summer has come
+Autumn has come
+Winter has come
 --

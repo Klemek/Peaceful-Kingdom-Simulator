@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 
-	private Base ga;
+	private Base ba;
 	private int VIEW = 1;
 	private BufferedImage[][] terrain;
 	private BufferedImage[][] terrainRouge;
@@ -28,15 +28,17 @@ public class GamePanel extends JPanel implements ActionListener{
 	private BufferedImage[][] constructionVert;
 	private BufferedImage[][] constructionGris;
 	
-	private int maxH = 8;
+	private BufferedImage image;
+	private Graphics2D buffer;
+
 	private int fps = 0;
+	private int fps2 = 0;
 	private int zoom = 20;
 	private int ZOOMMIN = 2;
 	private int ZOOMMAX = 40;
 	private int camX = 0;
 	private int camY = 0;
-	private boolean calch = false;
-	private Timer t = new Timer(20,this);
+	private Timer fpst = new Timer(1000,this);
 	private Font f;
 	private Font f2;
 
@@ -44,10 +46,10 @@ public class GamePanel extends JPanel implements ActionListener{
 	private BufferedImage alertes;
 	private BufferedImage pourcent;
 	
-	public GamePanel(Base g){
-		this.ga = g;
+	public GamePanel(Base ba){
+		this.ba = ba;
 		
-		this.terrain = ga.getTl().getLot(ga.getTl().TERRAIN);
+		this.terrain = ba.getTl().getLot(ba.getTl().TERRAIN);
 		Graphics gr,gv;
 		int w,h;
 		this.terrainRouge = new BufferedImage[this.terrain.length][];
@@ -72,19 +74,19 @@ public class GamePanel extends JPanel implements ActionListener{
 				terrainVert[j][i] = change(terrainVert[j][i],false,true,false);
 			}
 		}
-		this.details = ga.getTl().getLot(ga.getTl().DETAILS);
-		this.detailsRouge = ga.getTl().getLot(ga.getTl().DETAILS);
-		this.detailsVert = ga.getTl().getLot(ga.getTl().DETAILS);
+		this.details = ba.getTl().getLot(ba.getTl().DETAILS);
+		this.detailsRouge = ba.getTl().getLot(ba.getTl().DETAILS);
+		this.detailsVert = ba.getTl().getLot(ba.getTl().DETAILS);
 		for(int j = 0; j < 4; j++){
 			for(int i = 0; i < details[j].length; i++){
 				detailsRouge[j][i] = change(detailsRouge[j][i],true,false,false);
 				detailsVert[j][i] = change(detailsVert[j][i],false,true,false);
 			}
 		}
-		this.construction = ga.getTl().getLot(ga.getTl().CONSTRUCTION2);
-		this.constructionRouge = ga.getTl().getLot(ga.getTl().CONSTRUCTION2);
-		this.constructionVert = ga.getTl().getLot(ga.getTl().CONSTRUCTION2);
-		this.constructionGris = ga.getTl().getLot(ga.getTl().CONSTRUCTION1);
+		this.construction = ba.getTl().getLot(ba.getTl().CONSTRUCTION2);
+		this.constructionRouge = ba.getTl().getLot(ba.getTl().CONSTRUCTION2);
+		this.constructionVert = ba.getTl().getLot(ba.getTl().CONSTRUCTION2);
+		this.constructionGris = ba.getTl().getLot(ba.getTl().CONSTRUCTION1);
 		for(int j = 0; j < 4; j++){
 			for(int i = 0; i < construction[j].length; i++){
 				constructionRouge[j][i] = change(constructionRouge[j][i],true,false,false);
@@ -92,247 +94,226 @@ public class GamePanel extends JPanel implements ActionListener{
 				constructionGris[j][i] = change(constructionGris[j][i],false,false,true);
 			}
 		}
-		this.alertes = ga.getTl().getConstantImage(7);
-		nbalertes = ga.getTl().getConstantsImagesTaille(7);
-		this.pourcent = ga.getTl().getConstantImage(0);
-		this.addMouseMotionListener(g);
-		this.addMouseListener(g);
-		this.addMouseWheelListener(g);
-		this.t.start();
-		this.f = ga.getF().deriveFont(Font.PLAIN,20);
-		this.f2 = ga.getF().deriveFont(Font.PLAIN,40);
+		this.alertes = ba.getTl().getConstantImage(7);
+		nbalertes = ba.getTl().getConstantsImagesTaille(7);
+		this.pourcent = ba.getTl().getConstantImage(0);
+		this.addMouseMotionListener(ba);
+		this.addMouseListener(ba);
+		this.addMouseWheelListener(ba);
+		//this.t.start();
+		this.fpst.start();
+		this.f = ba.getF().deriveFont(Font.PLAIN,20);
+		this.f2 = ba.getF().deriveFont(Font.PLAIN,40);
 	}
 	
 	public void paintComponent(Graphics g){
-	    Graphics2D g2 = (Graphics2D)g;
-	    g2.setColor(Color.BLACK);
-	    g2.fillRect(0,0,this.getWidth(),this.getHeight());
+		if(buffer==null){
+			image = (BufferedImage) ba.createImage(this.getWidth(),this.getHeight());
+			buffer = image.createGraphics();
+		}
+	    buffer.setColor(Color.BLACK);
+	    buffer.fillRect(0,0,this.getWidth(),this.getHeight());
 	    
 	    switch(VIEW){
 	    case 0:
-	    	int t = ga.getG().getTaille();
+	    	int t = ba.getG().getTaille();
 		    for(int i = 0; i < t;i++){
 		    	for(int i2 = 0; i2 < t;i2++){
-			    	g2.setColor(ga.getG().getM().getMap0()[i][i2].getType()==1?new Color(153,214,0):ga.getG().getM().getMap0()[i][i2].getType()==2?new Color(45,161,255):ga.getG().getM().getMap0()[i][i2].getType()==3?new Color(166,166,166):new Color(0,0,0));
-			    	g2.fillRect((this.getWidth()-this.getHeight())/2+(i*this.getHeight()/t), i2*this.getHeight()/t,this.getHeight()/t, this.getHeight()/t);
+			    	buffer.setColor(ba.getG().getM().getMap0()[i][i2].getType()==1?new Color(153,214,0):ba.getG().getM().getMap0()[i][i2].getType()==2?new Color(45,161,255):ba.getG().getM().getMap0()[i][i2].getType()==3?new Color(166,166,166):new Color(0,0,0));
+			    	buffer.fillRect((this.getWidth()-this.getHeight())/2+(i*this.getHeight()/t), i2*this.getHeight()/t,this.getHeight()/t, this.getHeight()/t);
 			    }
 		    }
 	    	break;
 	    default:
 	    	
-	    	camX = (this.getWidth()/2)+ga.getG().getCamX();
-	    	camY = (this.getHeight()/2)+ga.getG().getCamY();
-	    	Terrain map0[][] = ga.getG().getM().getMap0();
-	    	Construction map1[][] = ga.getG().getM().getMap1();
-	    	if(calch){
-	    		
-	    		for(int i2 = ga.getG().getTaille()-1; i2 >= 0; i2--){for(int i = 0; i < ga.getG().getTaille(); i++){	
-	    			
-	    			if(ga.getG().hasSelected() && i == ga.getG().getSelected()[0] && i2 == ga.getG().getSelected()[1] && ga.getG().getSelstate() == 0){
-	    				if(map0[i][i2].getH() < maxH){
-	    					map0[i][i2].setH(map0[i][i2].getH()+1);
-	    					if(map1[i][i2] != null)map1[i][i2].setH(map1[i][i2].getH()+1);
-	    				}
-	    			}else if(ga.getG().hasOver() && i == ga.getG().getOver()[0] && i2 == ga.getG().getOver()[1] && ga.getG().getSelstate() == 0){
-	    				if(map0[i][i2].getH() < maxH){
-	    					map0[i][i2].setH(map0[i][i2].getH()+1);
-	    					if(map1[i][i2] != null)map1[i][i2].setH(map1[i][i2].getH()+1);
-	    				}
-	    			}else if(map0[i][i2].getH() > 0){
-	    				map0[i][i2].setH(map0[i][i2].getH()-1);
-	    				if(map1[i][i2] != null)map1[i][i2].setH(map1[i][i2].getH()-1);
-	    			}
-	    			
-	    		}}
-	    		if(ga.getG().getValues() != null){
-		    		for(int i = 0; i < ga.getG().getValues().length; i++){
-		    	 		if(ga.getG().getValues()[i] != null){
-		    	 			ga.getG().getValues()[i].event();
-		    	 		}
-		    		}
-	    		}
-	    		calch = false;
-	    	}
+	    	camX = (this.getWidth()/2)+ba.getG().getCamX();
+	    	camY = (this.getHeight()/2)+ba.getG().getCamY();
+	    	Terrain map0[][] = ba.getG().getM().getMap0();
+	    	Construction map1[][] = ba.getG().getM().getMap1();
 	    	
-	    	if(ga.getG().hasOver()){
-	    		for(int i2 = ga.getG().getTaille()-1; i2 >= 0; i2--){for(int i = 0; i < ga.getG().getTaille(); i++){	
-	    			if(i == ga.getG().getOver()[0] && i2 == ga.getG().getOver()[1]){
-	    				switch(ga.getG().getSelstate()){
+	    	if(ba.getG().hasOver()){
+	    		for(int i2 = ba.getG().getTaille()-1; i2 >= 0; i2--){for(int i = 0; i < ba.getG().getTaille(); i++){	
+	    			if(i == ba.getG().getOver()[0] && i2 == ba.getG().getOver()[1]){
+	    				switch(ba.getG().getSelstate()){
 	    				case 1:
-	    					drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2);
+	    					drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer);
 	    					if(map0[i][i2].getDetails() != null){
 				    			for(Detail d: map0[i][i2].getDetails()){
 				    				if(d.getCoord()[0]+d.getCoord()[1] < 1){
-				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2);
+				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer);
 				    				}
 				    			}
 				    		}
-	    					if(ga.getG().getChoix() != null)drawTerrain(ga.getG().getChoix().getTexture(),1,ga.getG().getChoix().getAnim(),baseX(i,i2),baseY(i,i2),0,ga.getG().getChoix().getState(),ga.getG().getChoix().getMaxstate(),g2,!(ga.getG().getChoix().estPlacable(i,i2)),ga.getG().getChoix().estPlacable(i,i2),false);
-	    					else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2);
+	    					if(ba.getG().getChoix() != null)drawTerrain(ba.getG().getChoix().getTexture(),1,ba.getG().getChoix().getAnim(),baseX(i,i2),baseY(i,i2),0,ba.getG().getChoix().getState(),ba.getG().getChoix().getMaxstate(),buffer,!(ba.getG().getChoix().estPlacable(i,i2)),ba.getG().getChoix().estPlacable(i,i2),false);
+	    					else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer);
 	    					if(map0[i][i2].getDetails() != null){
 				    			for(Detail d: map0[i][i2].getDetails()){
 				    				if(d.getCoord()[0]+d.getCoord()[1] > 1){
-				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2);
+				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer);
 				    				}
 				    			}
 				    		}
 	    					break;
 	    				case 2:
-	    					drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2,true,false,false);
+	    					drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer,true,false,false);
 	    					if(map0[i][i2].getDetails() != null){
 				    			for(Detail d: map0[i][i2].getDetails()){
 				    				if(d.getCoord()[0]+d.getCoord()[1] < 1){
-				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2,true,false);
+				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer,true,false);
 				    				}
 				    			}
 				    		}
-	    					if(map1[i][i2] != null)drawTerrain(map1[i][i2].getTexture(),1,map1[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map1[i][i2].getH(),map1[i][i2].getState(),map1[i][i2].getMaxstate(),g2,true,false,false);
-	    					else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2,true,false,false);
+	    					if(map1[i][i2] != null)drawTerrain(map1[i][i2].getTexture(),1,map1[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map1[i][i2].getH(),map1[i][i2].getState(),map1[i][i2].getMaxstate(),buffer,true,false,false);
+	    					else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer,true,false,false);
 	    					if(map0[i][i2].getDetails() != null){
 				    			for(Detail d: map0[i][i2].getDetails()){
 				    				if(d.getCoord()[0]+d.getCoord()[1] > 1){
-				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2,true,false);
+				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer,true,false);
 				    				}
 				    			}
 				    		}
 	    					break;
 	    				default:
-	    					drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2);
+	    					drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer);
 	    					if(map0[i][i2].getDetails() != null){
 				    			for(Detail d: map0[i][i2].getDetails()){
 				    				if(d.getCoord()[0]+d.getCoord()[1] < 1){
-				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2);
+				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer);
 				    				}
 				    			}
 				    		}
 	    					if(map1[i][i2] != null){
-				    			drawTerrain(map1[i][i2].getTexture(),1,map1[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map1[i][i2].getH(),map1[i][i2].getState(),map1[i][i2].getMaxstate(),g2,false,false,map1[i][i2].isDisabled());
-				    		}else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2);
+				    			drawTerrain(map1[i][i2].getTexture(),1,map1[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map1[i][i2].getH(),map1[i][i2].getState(),map1[i][i2].getMaxstate(),buffer,false,false,map1[i][i2].isDisabled());
+				    		}else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer);
 	    					if(map0[i][i2].getDetails() != null){
 				    			for(Detail d: map0[i][i2].getDetails()){
 				    				if(d.getCoord()[0]+d.getCoord()[1] > 1){
-				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2);
+				    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer);
 				    				}
 				    			}
 				    		}
-			    			if(map1[i][i2] != null && map1[i][i2].hasPourcent())drawPourcent(map1[i][i2].getP(),baseX(i,i2),baseY(i,i2),g2,map1[i][i2].getH());
-			    			if(map1[i][i2] != null && map1[i][i2].hasAlerte())drawAlerte(map1[i][i2].getAlerteType(),baseX(i,i2),baseY(i,i2),g2,map1[i][i2].getH());
+			    			if(map1[i][i2] != null && map1[i][i2].hasPourcent())drawPourcent(map1[i][i2].getP(),baseX(i,i2),baseY(i,i2),buffer,map1[i][i2].getH());
+			    			if(map1[i][i2] != null && map1[i][i2].hasAlerte())drawAlerte(map1[i][i2].getAlerteType(),baseX(i,i2),baseY(i,i2),buffer,map1[i][i2].getH());
 
 			    			break;
 	    				}
 		    			
 		    		}
 		    		else{
-		    			drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2);
+		    			drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer);
 		    			if(map0[i][i2].getDetails() != null){
 			    			for(Detail d: map0[i][i2].getDetails()){
 			    				if(d.getCoord()[0]+d.getCoord()[1] < 1){
-			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2);
+			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer);
 			    				}
 			    			}
 			    		}
 		    			if(map1[i][i2] != null){
-		    				drawTerrain(map1[i][i2].getTexture(),1,map1[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map1[i][i2].getH(),map1[i][i2].getState(),map1[i][i2].getMaxstate(),g2,false,false,map1[i][i2].isDisabled());
-		    			}else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2);
+		    				drawTerrain(map1[i][i2].getTexture(),1,map1[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map1[i][i2].getH(),map1[i][i2].getState(),map1[i][i2].getMaxstate(),buffer,false,false,map1[i][i2].isDisabled());
+		    			}else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer);
 		    			if(map0[i][i2].getDetails() != null){
 			    			for(Detail d: map0[i][i2].getDetails()){
 			    				if(d.getCoord()[0]+d.getCoord()[1] > 1){
-			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2);
+			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer);
 			    				}
 			    			}
 			    		}
-	    				if(map1[i][i2] != null && map1[i][i2].hasPourcent())drawPourcent(map1[i][i2].getP(),baseX(i,i2),baseY(i,i2),g2,map1[i][i2].getH());
-		    			if(map1[i][i2] != null && map1[i][i2].hasAlerte())drawAlerte(map1[i][i2].getAlerteType(),baseX(i,i2),baseY(i,i2),g2,map1[i][i2].getH());
+	    				if(map1[i][i2] != null && map1[i][i2].hasPourcent())drawPourcent(map1[i][i2].getP(),baseX(i,i2),baseY(i,i2),buffer,map1[i][i2].getH());
+		    			if(map1[i][i2] != null && map1[i][i2].hasAlerte())drawAlerte(map1[i][i2].getAlerteType(),baseX(i,i2),baseY(i,i2),buffer,map1[i][i2].getH());
 
 		    		
 		    		}
 		    			
 		    	}}
 	    	}else{
-	    		if(ga.getG().getSelstate()==1){
-	    			for(int i2 = ga.getG().getTaille()-1; i2 >= 0; i2--){for(int i = 0; i < ga.getG().getTaille(); i++){	
-			    		drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2,!(ga.getG().getChoix().estPlacable(i,i2)),ga.getG().getChoix().estPlacable(i,i2),false);
+	    		if(ba.getG().getSelstate()==1){
+	    			for(int i2 = ba.getG().getTaille()-1; i2 >= 0; i2--){for(int i = 0; i < ba.getG().getTaille(); i++){	
+			    		drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer,!(ba.getG().getChoix().estPlacable(i,i2)),ba.getG().getChoix().estPlacable(i,i2),false);
 			    		if(map0[i][i2].getDetails() != null){
 			    			for(Detail d: map0[i][i2].getDetails()){
 			    				if(d.getCoord()[0]+d.getCoord()[1] < 1){
-			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2,!(ga.getG().getChoix().estPlacable(i,i2)),ga.getG().getChoix().estPlacable(i,i2));
+			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer,!(ba.getG().getChoix().estPlacable(i,i2)),ba.getG().getChoix().estPlacable(i,i2));
 			    				}
 			    			}
 			    		}
-			    		if(map1[i][i2] != null)drawTerrain(map1[i][i2].getTexture(),1,map1[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map1[i][i2].getH(),map1[i][i2].getState(),map1[i][i2].getMaxstate(),g2,!(ga.getG().getChoix().estPlacable(i,i2)),ga.getG().getChoix().estPlacable(i,i2),false);
-			    		else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2,!(ga.getG().getChoix().estPlacable(i,i2)),ga.getG().getChoix().estPlacable(i,i2),false);
+			    		if(map1[i][i2] != null)drawTerrain(map1[i][i2].getTexture(),1,map1[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map1[i][i2].getH(),map1[i][i2].getState(),map1[i][i2].getMaxstate(),buffer,!(ba.getG().getChoix().estPlacable(i,i2)),ba.getG().getChoix().estPlacable(i,i2),false);
+			    		else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer,!(ba.getG().getChoix().estPlacable(i,i2)),ba.getG().getChoix().estPlacable(i,i2),false);
 			    		if(map0[i][i2].getDetails() != null){
 			    			for(Detail d: map0[i][i2].getDetails()){
 			    				if(d.getCoord()[0]+d.getCoord()[1] > 1){
-			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2,!(ga.getG().getChoix().estPlacable(i,i2)),ga.getG().getChoix().estPlacable(i,i2));
+			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer,!(ba.getG().getChoix().estPlacable(i,i2)),ba.getG().getChoix().estPlacable(i,i2));
 			    				}
 			    			}
 			    		}
 	    			}}
 	    		}else{
-		    		for(int i2 = ga.getG().getTaille()-1; i2 >= 0; i2--){for(int i = 0; i < ga.getG().getTaille(); i++){	
-			    		drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2);
+		    		for(int i2 = ba.getG().getTaille()-1; i2 >= 0; i2--){for(int i = 0; i < ba.getG().getTaille(); i++){	
+			    		drawTerrain(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer);
 			    		if(map0[i][i2].getDetails() != null){
 			    			for(Detail d: map0[i][i2].getDetails()){
 			    				if(d.getCoord()[0]+d.getCoord()[1] < 1){
-			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2);
+			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer);
 			    				}
 			    			}
 			    		}
 			    		if(map1[i][i2] != null){
-			    			drawTerrain(map1[i][i2].getTexture(),1,map1[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map1[i][i2].getH(),map1[i][i2].getState(),map1[i][i2].getMaxstate(),g2,false,false,map1[i][i2].isDisabled());
-			    		}else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,g2);
+			    			drawTerrain(map1[i][i2].getTexture(),1,map1[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),map1[i][i2].getH(),map1[i][i2].getState(),map1[i][i2].getMaxstate(),buffer,false,false,map1[i][i2].isDisabled());
+			    		}else if(map0[i][i2].hasDecor())drawTerrain(map0[i][i2].getDTexture(),1,map0[i][i2].getDAnim(),baseX(i,i2),baseY(i,i2),map0[i][i2].getH(),0,1,buffer);
 			    		if(map0[i][i2].getDetails() != null){
 			    			for(Detail d: map0[i][i2].getDetails()){
 			    				if(d.getCoord()[0]+d.getCoord()[1] > 1){
-			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),g2);
+			    					drawDetail(d.getT(), d.getAp(), d.getNb(),baseX(i,i2),baseY(i,i2),d.getCoord()[0],d.getCoord()[1],map0[i][i2].getH(),buffer);
 			    				}
 			    			}
 			    		}
-		    			if(map1[i][i2] != null && map1[i][i2].hasPourcent())drawPourcent(map1[i][i2].getP(),baseX(i,i2),baseY(i,i2),g2,map1[i][i2].getH());
-		    			if(map1[i][i2] != null && map1[i][i2].hasAlerte())drawAlerte(map1[i][i2].getAlerteType(),baseX(i,i2),baseY(i,i2),g2,map1[i][i2].getH());
+		    			if(map1[i][i2] != null && map1[i][i2].hasPourcent())drawPourcent(map1[i][i2].getP(),baseX(i,i2),baseY(i,i2),buffer,map1[i][i2].getH());
+		    			if(map1[i][i2] != null && map1[i][i2].hasAlerte())drawAlerte(map1[i][i2].getAlerteType(),baseX(i,i2),baseY(i,i2),buffer,map1[i][i2].getH());
 
 	    				
 
 		    		}}
 	    		}
 	    	}
-	    	if(ga.getG().getValues() != null){
-	    		for(int i = 0; i < ga.getG().getValues().length; i++){
-	    	 		if(ga.getG().getValues()[i] != null){
-	    	 			if(ga.getG().getValues()[i].getI() == 0)ga.getG().getValues()[i] = null;
-	    	 			else drawInfoValue(ga.getG().getValues()[i],g2);
+	    	if(ba.getG().getValues() != null){
+	    		for(int i = 0; i < ba.getG().getValues().length; i++){
+	    	 		if(ba.getG().getValues()[i] != null){
+	    	 			if(ba.getG().getValues()[i].getI() == 0)ba.getG().getValues()[i] = null;
+	    	 			else drawInfoValue(ba.getG().getValues()[i],buffer);
 	    	 		}
 	    	 		
 	    	 	}
 	    	}
-	    	g2.setFont(f2);
+	    	buffer.setFont(f2);
 	    	
-	    	if(ga.getG().getLog()!=null){
-	    		if(ga.getG().getLog().size()<5){
-	    			g2.setColor(new Color(0,0,0,128));
-	    			g2.fillRect(5,this.getHeight()-5,355,-(ga.getG().getLog().size()*25+5));
-		    		for(int i = 0; i < ga.getG().getLog().size(); i++){
-		    			g2.setColor(Util.changeAlpha(ga.getG().getLogColor().get(ga.getG().getLog().size()-1-i),255-(i*(255/6))));
-		    			g2.drawString(ga.getG().getLog().get(ga.getG().getLog().size()-1-i),10,this.getHeight()-25*i-10);
+	    	if(ba.getG().getLog()!=null){
+	    		if(ba.getG().getLog().size()<5){
+	    			buffer.setColor(new Color(0,0,0,128));
+	    			buffer.fillRect(5,this.getHeight()-5,355,-(ba.getG().getLog().size()*25+5));
+		    		for(int i = 0; i < ba.getG().getLog().size(); i++){
+		    			buffer.setColor(Util.changeAlpha(ba.getG().getLogColor().get(ba.getG().getLog().size()-1-i),255-(i*(255/6))));
+		    			buffer.drawString(ba.getG().getLog().get(ba.getG().getLog().size()-1-i),10,this.getHeight()-25*i-10);
 		    		}
 		    	}else{
-			    		g2.setColor(new Color(0,0,0,128));
-		    			g2.fillRect(5,this.getHeight()-5,355,-130);
+			    		buffer.setColor(new Color(0,0,0,128));
+		    			buffer.fillRect(5,this.getHeight()-5,355,-130);
 		    		for(int i = 0; i < 5; i++){
-		    			g2.setColor(Util.changeAlpha(ga.getG().getLogColor().get(ga.getG().getLog().size()-1-i),255-(i*(255/6))));
-		    			g2.drawString(ga.getG().getLog().get(ga.getG().getLog().size()-1-i),10,this.getHeight()-25*i-10);
+		    			buffer.setColor(Util.changeAlpha(ba.getG().getLogColor().get(ba.getG().getLog().size()-1-i),255-(i*(255/6))));
+		    			buffer.drawString(ba.getG().getLog().get(ba.getG().getLog().size()-1-i),10,this.getHeight()-25*i-10);
 		    		}
 		    	}
 	    	}
 	    	
 	    	
     		break;
-    		
-    		
 	    }
+		if(ba.getOpt().fps){
+			buffer.setFont(f2);
+			buffer.setColor(Color.WHITE);
+			buffer.drawString(""+fps2,2,f2.getSize()/2);
+	    }
+	    g.drawImage(image, 0, 0, this);
 	    fps++;
-	    ga.repaintPanels();
+	    ba.repaintPanels();
 	    
 	}
 	
@@ -340,26 +321,26 @@ public class GamePanel extends JPanel implements ActionListener{
 		int x = Util.arrondi((((1-x2)/2)+(y2/2))*zoom*8);
 		int y = Util.arrondi(((x2/2)+(y2/2))*zoom*4);
 		if(!(x1+x+Util.arrondi((double)zoom/1.1D) > this.getWidth() || Util.arrondi((double)zoom*2.2D)+y1+10-(h*zoom/10)+y+Util.arrondi((double)zoom/1.1D) > this.getHeight() || x1+x < 0 || Util.arrondi((double)zoom*2.2)+y1+10-(h*zoom/10)+y < 0))
-		g2.drawImage(details[ga.getG().getSaison()][t],x1+x,Util.arrondi((double)zoom*2.2)+y1+10-(h*zoom/10)+y,x1+x+Util.arrondi((double)zoom/1.1D),Util.arrondi((double)zoom*2.2D)+y1+10-(h*zoom/10)+y+Util.arrondi((double)zoom/1.1D),ap*(details[ga.getG().getSaison()][t].getWidth()/nb),0,(ap+1)*(details[ga.getG().getSaison()][t].getWidth()/nb),details[ga.getG().getSaison()][t].getHeight(),this);
+		g2.drawImage(details[ba.getG().getSaison()][t],x1+x,Util.arrondi((double)zoom*2.2)+y1+10-(h*zoom/10)+y,x1+x+Util.arrondi((double)zoom/1.1D),Util.arrondi((double)zoom*2.2D)+y1+10-(h*zoom/10)+y+Util.arrondi((double)zoom/1.1D),ap*(details[ba.getG().getSaison()][t].getWidth()/nb),0,(ap+1)*(details[ba.getG().getSaison()][t].getWidth()/nb),details[ba.getG().getSaison()][t].getHeight(),this);
 	}
 	
 	public void drawDetail2(int t,int ap, int nb, int x1, int y1,double x2,double y2,int h,  Graphics2D g2){
 		int x = Util.arrondi((((1-x2)/2)+(y2/2))*zoom*8);
 		int y = Util.arrondi(((x2/2)+(y2/2))*zoom*4);
-		g2.drawImage(details[ga.getG().getSaison()][t],x1+x,Util.arrondi((double)zoom*2.2)+y1+10-(h*zoom/10)+y,x1+x+Util.arrondi((double)zoom/1.1D),Util.arrondi((double)zoom*2.2D)+y1+10-(h*zoom/10)+y+Util.arrondi((double)zoom/1.1D),ap*(details[ga.getG().getSaison()][t].getWidth()/nb),0,(ap+1)*(details[ga.getG().getSaison()][t].getWidth()/nb),details[ga.getG().getSaison()][t].getHeight(),this);
+		g2.drawImage(details[ba.getG().getSaison()][t],x1+x,Util.arrondi((double)zoom*2.2)+y1+10-(h*zoom/10)+y,x1+x+Util.arrondi((double)zoom/1.1D),Util.arrondi((double)zoom*2.2D)+y1+10-(h*zoom/10)+y+Util.arrondi((double)zoom/1.1D),ap*(details[ba.getG().getSaison()][t].getWidth()/nb),0,(ap+1)*(details[ba.getG().getSaison()][t].getWidth()/nb),details[ba.getG().getSaison()][t].getHeight(),this);
 	}
 	
 	public void drawDetail(int t,int ap, int nb, int x1, int y1,double x2,double y2,int h,  Graphics2D g2, boolean r,boolean g){
 		BufferedImage[] i = null;
 		
-		if(r) i = detailsRouge[ga.getG().getSaison()];
-		else if(g) i = detailsVert[ga.getG().getSaison()];
-		else i = details[ga.getG().getSaison()];
+		if(r) i = detailsRouge[ba.getG().getSaison()];
+		else if(g) i = detailsVert[ba.getG().getSaison()];
+		else i = details[ba.getG().getSaison()];
 		
 		int x = Util.arrondi((((1-x2)/2)+(y2/2))*zoom*8);
 		int y = Util.arrondi(((x2/2)+(y2/2))*zoom*4);
 		if(!(x1+x+Util.arrondi((double)zoom/1.1D) > this.getWidth() || Util.arrondi((double)zoom*2.2D)+y1+10-(h*zoom/10)+y+Util.arrondi((double)zoom/1.1D) > this.getHeight() || x1+x < 0 || Util.arrondi((double)zoom*2.2)+y1+10-(h*zoom/10)+y < 0))
-		g2.drawImage(i[t],x1+x,Util.arrondi((double)zoom*2.2)+y1+10-(h*zoom/10)+y,x1+x+Util.arrondi((double)zoom/1.1D),Util.arrondi((double)zoom*2.2D)+y1+10-(h*zoom/10)+y+Util.arrondi((double)zoom/1.1D),ap*(details[ga.getG().getSaison()][t].getWidth()/nb),0,(ap+1)*(details[ga.getG().getSaison()][t].getWidth()/nb),details[ga.getG().getSaison()][t].getHeight(),this);
+		g2.drawImage(i[t],x1+x,Util.arrondi((double)zoom*2.2)+y1+10-(h*zoom/10)+y,x1+x+Util.arrondi((double)zoom/1.1D),Util.arrondi((double)zoom*2.2D)+y1+10-(h*zoom/10)+y+Util.arrondi((double)zoom/1.1D),ap*(details[ba.getG().getSaison()][t].getWidth()/nb),0,(ap+1)*(details[ba.getG().getSaison()][t].getWidth()/nb),details[ba.getG().getSaison()][t].getHeight(),this);
 	}
 	
 	
@@ -400,10 +381,10 @@ public class GamePanel extends JPanel implements ActionListener{
 			BufferedImage[] i = null;
 			switch(img){
 				case 0:
-					i = terrain[ga.getG().getSaison()];
+					i = terrain[ba.getG().getSaison()];
 					break;
 				case 1:
-					i = construction[ga.getG().getSaison()];					
+					i = construction[ba.getG().getSaison()];					
 			}
 			int he = i[t].getHeight()/maxstate;
 			if(!(x > this.getWidth() || y+10 > this.getHeight() || x+zoom*8 < 0 || y+zoom*8 < 0))
@@ -415,10 +396,10 @@ public class GamePanel extends JPanel implements ActionListener{
 		BufferedImage[] i = null;
 		switch(img){
 			case 0:
-				i = terrain[ga.getG().getSaison()];
+				i = terrain[ba.getG().getSaison()];
 				break;
 			case 1:
-				i = construction[ga.getG().getSaison()];					
+				i = construction[ba.getG().getSaison()];					
 		}
 		int he = i[t].getHeight()/maxstate;
 		g2.drawImage(i[t],x,y+10-(h*zoom/10),x+zoom*8,y+zoom*8+10-(h*zoom/10),anim*he,state*he,anim*he+he,state*he+he,this);
@@ -430,15 +411,15 @@ public class GamePanel extends JPanel implements ActionListener{
 		BufferedImage[] i = null;
 		switch(img){
 			case 0:
-				if(r) i = terrainRouge[ga.getG().getSaison()];
-				else if(g) i = terrainVert[ga.getG().getSaison()];
-				else i = terrain[ga.getG().getSaison()];
+				if(r) i = terrainRouge[ba.getG().getSaison()];
+				else if(g) i = terrainVert[ba.getG().getSaison()];
+				else i = terrain[ba.getG().getSaison()];
 				break;
 			case 1:
-				if(r) i = constructionRouge[ga.getG().getSaison()];
-				else if(g) i = constructionVert[ga.getG().getSaison()];
-				else if(t) i = constructionGris[ga.getG().getSaison()];
-				else i = construction[ga.getG().getSaison()];				
+				if(r) i = constructionRouge[ba.getG().getSaison()];
+				else if(g) i = constructionVert[ba.getG().getSaison()];
+				else if(t) i = constructionGris[ba.getG().getSaison()];
+				else i = construction[ba.getG().getSaison()];				
 		}
 		int he = i[te].getHeight()/maxstate;
 		if(!(x > this.getWidth() || y+10 > this.getHeight() || x+zoom*8 < 0 || y+zoom*8 < 0))
@@ -483,20 +464,20 @@ public class GamePanel extends JPanel implements ActionListener{
 		return img;
 	}
 	public BufferedImage printImage(){
-		BufferedImage img = new BufferedImage(160*ga.getG().getTaille(),80*ga.getG().getTaille()+80,BufferedImage.TYPE_INT_ARGB);
+		BufferedImage img = new BufferedImage(160*ba.getG().getTaille(),80*ba.getG().getTaille()+80,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D)img.getGraphics();
 		
 		int sz = zoom;
 		zoom = 20;
 		int scx = camX;
-		camX = 80*ga.getG().getTaille();
+		camX = 80*ba.getG().getTaille();
 		int scy = camY;
-		camY = 40*ga.getG().getTaille()+40;
+		camY = 40*ba.getG().getTaille()+40;
 		
-    	Terrain map0[][] = ga.getG().getM().getMap0();
-    	Construction map1[][] = ga.getG().getM().getMap1();
+    	Terrain map0[][] = ba.getG().getM().getMap0();
+    	Construction map1[][] = ba.getG().getM().getMap1();
 
-	    for(int i2 = ga.getG().getTaille()-1; i2 >= 0; i2--){for(int i = 0; i < ga.getG().getTaille(); i++){	
+	    for(int i2 = ba.getG().getTaille()-1; i2 >= 0; i2--){for(int i = 0; i < ba.getG().getTaille(); i++){	
 	  		drawTerrain2(map0[i][i2].getTexture(),0,map0[i][i2].getAnim(),baseX(i,i2),baseY(i,i2),0,0,1,g2);
 	  		if(map0[i][i2].getDetails() != null){
 	  			for(Detail d: map0[i][i2].getDetails()){
@@ -539,13 +520,13 @@ public class GamePanel extends JPanel implements ActionListener{
 
 	public int[] getPos(){
 		int pos[] = {-1,-1};
-		for(int i = 0; i < ga.getG().getTaille(); i++){for(int i2 = 0; i2 < ga.getG().getTaille(); i2++){	
+		for(int i = 0; i < ba.getG().getTaille(); i++){for(int i2 = 0; i2 < ba.getG().getTaille(); i2++){	
 			int X = zoom*8;
 			int Y = zoom*4;
 			int oX = baseX(i,i2);
 			int oY = baseY(i,i2)+zoom*4;
-			int x = ga.getMouseX()-oX;
-			int y = ga.getMouseY()-oY;
+			int x = ba.getMouseX()-oX;
+			int y = ba.getMouseY()-oY;
     		if(Y+(Y*2)/X*x >= y*2 && -Y+(Y*2)/X*x <= y*2 && Y-(Y*2)/X*x <= y*2 && 3*Y-(Y*2)/X*x >= y*2){
     			pos[0] = i;
     			pos[1] = i2;
@@ -556,7 +537,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	
 	
 	public int baseX(int i,int i2){
-		return camX+(i*zoom*4)+(i2*zoom*4)-ga.getG().getTaille()*zoom*4;
+		return camX+(i*zoom*4)+(i2*zoom*4)-ba.getG().getTaille()*zoom*4;
 	}
 	public int baseY(int i,int i2){
 		return camY-zoom*6+i*zoom*2-i2*zoom*2;
@@ -570,7 +551,9 @@ public class GamePanel extends JPanel implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		calch = true;
-		
+		if(arg0.getSource()==fpst){
+			fps2 = fps;
+			fps = 0;
+		}
 	}
 }

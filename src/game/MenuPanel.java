@@ -11,7 +11,7 @@ public class MenuPanel extends Panel implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	
-	private Base ga;
+	private Base ba;
 	private JLabel title;
 	private Dimension b = new Dimension(160,30);
 	private Button continuer;
@@ -24,7 +24,7 @@ public class MenuPanel extends Panel implements ActionListener{
 	
 	public MenuPanel(Base g) {
 		super(g);
-		this.ga = g;
+		this.ba = g;
 		title = new JLabel(g.getlang().getMenu().get(0));
 		title.setForeground(Color.BLACK);
 		title.setFont(g.getF().deriveFont(Font.PLAIN,40));
@@ -37,7 +37,7 @@ public class MenuPanel extends Panel implements ActionListener{
 		this.add(title);
 		this.add(continuer);
 		this.add(quitter);
-		this.setBounds((ga.getWidth()-taillex)/2,(ga.getGp().getHeight()-tailley)/2,taillex,tailley);
+		this.setBounds((ba.getWidth()-taillex)/2,(ba.getGp().getHeight()-tailley)/2,taillex,tailley);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class MenuPanel extends Panel implements ActionListener{
 		}
 		if(e.getSource() == quitter){
 			game = false;
-			ga.openMainMenu();
+			ba.openMainMenu();
 			close();
 		}
 		
@@ -55,11 +55,12 @@ public class MenuPanel extends Panel implements ActionListener{
 	
 	public void close(){
 		if(game){
-			ga.getG().getTick().setDelay(ga.getG().getDELAY()[0]);
-			ga.getG().getTick().start();
+
+			ba.getG().setTick(ba.getG().getDELAY()[0]);
+			ba.resumeG();
 		}
 		this.getParent().remove(this);
-		ga.cleanGP();
+		ba.cleanGP();
 	}
 
 		

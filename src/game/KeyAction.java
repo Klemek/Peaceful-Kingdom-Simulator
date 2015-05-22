@@ -9,16 +9,16 @@ public class KeyAction extends AbstractAction{
 	private static final long serialVersionUID = 1L;
 	
 	int keyCode;
-	Base b;
+	Base ba;
 	
 	public KeyAction(int keyCode, Base b){
 		this.keyCode = keyCode;
-		this.b = b;
+		this.ba = b;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		b.keyPressed(keyCode);
+		ba.keyPressed(keyCode);
 	}
 
 }

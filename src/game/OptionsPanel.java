@@ -16,12 +16,13 @@ public class OptionsPanel extends JPanel implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 
-	private Base ga;
+	private Base ba;
 	
 	private Button taille;
 	private Button pe;
 	private Button details;
 	private Button anim;
+	private Button fps;
 	private Button lang;
 	
 	private Button appliquer;
@@ -31,9 +32,9 @@ public class OptionsPanel extends JPanel implements ActionListener{
 	private Dimension b = new Dimension(160,30);
 	
 	
-	public OptionsPanel(Base g){
-		this.ga = g;
-		opt = ga.getOpt();
+	public OptionsPanel(Base ba){
+		this.ba = ba;
+		opt = ba.getOpt();
 		
 		this.setLayout(new BorderLayout());
 		
@@ -46,20 +47,20 @@ public class OptionsPanel extends JPanel implements ActionListener{
 		s.setBackground(new Color(0,0,0,10));
 		
 		//titre
-		JLabel title = new JLabel(g.getlang().getMenu().get(1));
+		JLabel title = new JLabel(ba.getlang().getMenu().get(1));
 		title.setForeground(Color.BLACK);
-		title.setFont(g.getF().deriveFont(Font.PLAIN,60));
+		title.setFont(ba.getF().deriveFont(Font.PLAIN,60));
 		n.add(title);
 		
 		//Taille
 		JPanel jpt = new JPanel();
 		
-		JLabel ta = new JLabel(g.getlang().getGuimenu().get(0).get(0)+" :");
+		JLabel ta = new JLabel(ba.getlang().getGuimenu().get(0).get(0)+" :");
 		ta.setForeground(Color.BLACK);
-		ta.setFont(g.getF().deriveFont(Font.PLAIN,40));
+		ta.setFont(ba.getF().deriveFont(Font.PLAIN,40));
 		jpt.add(ta);
 		
-		taille = new Button(opt.size[0]+"x"+opt.size[1],g);
+		taille = new Button(opt.size[0]+"x"+opt.size[1],ba);
 		taille.setPreferredSize(b);
 		taille.addActionListener(this);
 		jpt.add(taille);
@@ -71,12 +72,12 @@ public class OptionsPanel extends JPanel implements ActionListener{
 		//Plein écran
 		JPanel jpe = new JPanel();
 		
-		JLabel ple = new JLabel(g.getlang().getGuimenu().get(0).get(1)+" :");
+		JLabel ple = new JLabel(ba.getlang().getGuimenu().get(0).get(1)+" :");
 		ple.setForeground(Color.BLACK);
-		ple.setFont(g.getF().deriveFont(Font.PLAIN,40));
+		ple.setFont(ba.getF().deriveFont(Font.PLAIN,40));
 		jpe.add(ple);
 		
-		pe = new Button(opt.fullscreen?g.getlang().getUsage().get(0):g.getlang().getUsage().get(1),g);
+		pe = new Button(opt.fullscreen?ba.getlang().getUsage().get(0):ba.getlang().getUsage().get(1),ba);
 		pe.setPreferredSize(b);
 		pe.addActionListener(this);
 		jpe.add(pe);
@@ -88,12 +89,12 @@ public class OptionsPanel extends JPanel implements ActionListener{
 		//Details
 		JPanel jd = new JPanel();
 		
-		JLabel det = new JLabel(g.getlang().getGuimenu().get(0).get(2)+" :");
+		JLabel det = new JLabel(ba.getlang().getGuimenu().get(0).get(2)+" :");
 		det.setForeground(Color.BLACK);
-		det.setFont(g.getF().deriveFont(Font.PLAIN,40));
+		det.setFont(ba.getF().deriveFont(Font.PLAIN,40));
 		jd.add(det);
 		
-		details = new Button(opt.details?g.getlang().getUsage().get(0):g.getlang().getUsage().get(1),g);
+		details = new Button(opt.details?ba.getlang().getUsage().get(0):ba.getlang().getUsage().get(1),ba);
 		details.setPreferredSize(b);
 		details.addActionListener(this);
 		jd.add(details);
@@ -105,29 +106,41 @@ public class OptionsPanel extends JPanel implements ActionListener{
 		//animations
 		JPanel ja = new JPanel();
 		
-		JLabel ani = new JLabel(g.getlang().getGuimenu().get(0).get(3)+" :");
+		JLabel ani = new JLabel(ba.getlang().getGuimenu().get(0).get(3)+" :");
 		ani.setForeground(Color.BLACK);
-		ani.setFont(g.getF().deriveFont(Font.PLAIN,40));
+		ani.setFont(ba.getF().deriveFont(Font.PLAIN,40));
 		ja.add(ani);
 		
-		anim = new Button(opt.animations?g.getlang().getUsage().get(0):g.getlang().getUsage().get(1),g);
+		anim = new Button(opt.animations?ba.getlang().getUsage().get(0):ba.getlang().getUsage().get(1),ba);
 		anim.setPreferredSize(b);
 		anim.addActionListener(this);
 		ja.add(anim);
 		
-		ja.setBackground(new Color(0,0,0,0));
-		ja.setPreferredSize(new Dimension(opt.size[0],40));
-		c.add(ja);
+		JPanel jf = new JPanel();
+		
+		JLabel fpsl = new JLabel(ba.getlang().getGuimenu().get(0).get(4)+" :");
+		fpsl.setForeground(Color.BLACK);
+		fpsl.setFont(ba.getF().deriveFont(Font.PLAIN,40));
+		jf.add(fpsl);
+		
+		fps = new Button(opt.fps?ba.getlang().getUsage().get(0):ba.getlang().getUsage().get(1),ba);
+		fps.setPreferredSize(b);
+		fps.addActionListener(this);
+		jf.add(fps);
+		
+		jf.setBackground(new Color(0,0,0,0));
+		jf.setPreferredSize(new Dimension(opt.size[0],40));
+		c.add(jf);
 		
 		//Langue
 		JPanel jl = new JPanel();
 		
-		JLabel lan = new JLabel(g.getlang().getGuimenu().get(0).get(4)+" :");
+		JLabel lan = new JLabel(ba.getlang().getGuimenu().get(0).get(5)+" :");
 		lan.setForeground(Color.BLACK);
-		lan.setFont(g.getF().deriveFont(Font.PLAIN,40));
+		lan.setFont(ba.getF().deriveFont(Font.PLAIN,40));
 		jl.add(lan);
 		
-		lang = new Button(g.getlang().getLangue(opt.langue),g);
+		lang = new Button(ba.getlang().getLangue(opt.langue),ba);
 		lang.setPreferredSize(b);
 		lang.addActionListener(this);
 		jl.add(lang);
@@ -137,17 +150,17 @@ public class OptionsPanel extends JPanel implements ActionListener{
 		c.add(jl);
 		
 		//boutons
-		appliquer = new Button(g.getlang().getBouton().get(4),g);
+		appliquer = new Button(ba.getlang().getBouton().get(4),ba);
 		appliquer.setPreferredSize(b);
 		appliquer.addActionListener(this);
 		s.add(appliquer);
 		
-		defaut = new Button(g.getlang().getBouton().get(5),g);
+		defaut = new Button(ba.getlang().getBouton().get(5),ba);
 		defaut.setPreferredSize(b);
 		defaut.addActionListener(this);
 		s.add(defaut);
 		
-		retour = new Button(g.getlang().getBouton().get(7),g);
+		retour = new Button(ba.getlang().getBouton().get(7),ba);
 		retour.setPreferredSize(b);
 		retour.addActionListener(this);
 		s.add(retour);
@@ -174,17 +187,22 @@ public class OptionsPanel extends JPanel implements ActionListener{
 		
 		if(arg0.getSource() == pe){
 			opt.fullscreen = !opt.fullscreen;
-			pe.setTitle(opt.fullscreen?ga.getlang().getUsage().get(0):ga.getlang().getUsage().get(1));
+			pe.setTitle(opt.fullscreen?ba.getlang().getUsage().get(0):ba.getlang().getUsage().get(1));
 		}
 		
 		if(arg0.getSource() == details){
 			opt.details = !opt.details;
-			details.setTitle(opt.details?ga.getlang().getUsage().get(0):ga.getlang().getUsage().get(1));
+			details.setTitle(opt.details?ba.getlang().getUsage().get(0):ba.getlang().getUsage().get(1));
 		}
 		
 		if(arg0.getSource() == anim){
 			opt.animations = !opt.animations;
-			anim.setTitle(opt.animations?ga.getlang().getUsage().get(0):ga.getlang().getUsage().get(1));
+			anim.setTitle(opt.animations?ba.getlang().getUsage().get(0):ba.getlang().getUsage().get(1));
+		}
+		
+		if(arg0.getSource() == fps){
+			opt.fps = !opt.fps;
+			fps.setTitle(opt.fps?ba.getlang().getUsage().get(0):ba.getlang().getUsage().get(1));
 		}
 		
 		if(arg0.getSource() == lang){
@@ -192,26 +210,26 @@ public class OptionsPanel extends JPanel implements ActionListener{
 			if(opt.langue==2){
 				opt.langue=0;
 			}
-			lang.setTitle(ga.getlang().getLangue(opt.langue));
+			lang.setTitle(ba.getlang().getLangue(opt.langue));
 		}
 		
 		if(arg0.getSource() == defaut){
 			opt.setDefaut();
 			taille.setTitle(opt.size[0]+"x"+opt.size[1]);
-			pe.setTitle(opt.fullscreen?ga.getlang().getUsage().get(0):ga.getlang().getUsage().get(1));
-			details.setTitle(opt.details?ga.getlang().getUsage().get(0):ga.getlang().getUsage().get(1));
-			anim.setTitle(opt.animations?ga.getlang().getUsage().get(0):ga.getlang().getUsage().get(1));
-			lang.setTitle(ga.getlang().getLangue(opt.langue));
+			pe.setTitle(opt.fullscreen?ba.getlang().getUsage().get(0):ba.getlang().getUsage().get(1));
+			details.setTitle(opt.details?ba.getlang().getUsage().get(0):ba.getlang().getUsage().get(1));
+			anim.setTitle(opt.animations?ba.getlang().getUsage().get(0):ba.getlang().getUsage().get(1));
+			lang.setTitle(ba.getlang().getLangue(opt.langue));
 		}
 		if(arg0.getSource() == appliquer){
-			ga.setOpt(opt);
-			ga.majLang();
-			ga.openMainMenu();
-			ga.openOptions();
-			ga.getFm().saveOptions(opt);
+			ba.setOpt(opt);
+			ba.majLang();
+			ba.openMainMenu();
+			ba.openOptions();
+			ba.getFm().saveOptions(opt);
 		}
 		if(arg0.getSource() == retour){
-			ga.openMainMenu();
+			ba.openMainMenu();
 		}
 		
 	}

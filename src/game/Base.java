@@ -26,7 +26,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.Timer;
+//import javax.swing.Timer;
 
 
 public class Base extends JFrame implements ActionListener,MouseListener,MouseMotionListener, MouseWheelListener, WindowListener, WindowStateListener{
@@ -35,7 +35,7 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 
 	private boolean INFO = true;
 	
-	private boolean DEV = true;
+	//private boolean DEV = true;
 	private String version = "Alpha 1.3";
 	
 	private Options opt;
@@ -49,18 +49,20 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 	
 	private int state;
 	
-	private Timer tFps = new Timer(1000,this);
-	private Timer t0 = new Timer(1,this); 
+	//private Timer tFps = new Timer(1000,this);
+	//private Timer t0 = new Timer(10,this); 
 	
 	private Language lang;
 	
 	private int mouseX = 0;
 	private int mouseY = 0;
 	private boolean click = false;
-	private int fps = 0;
+	//private int fps = 0;
 
 	
 	private GamePanel gp;
+	private Thread gpt;
+	
 	private InfoPanel ip;
 	private Info2Panel i2p;
 	private MenuPanel mp;
@@ -80,7 +82,6 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 	
 	private boolean game = false;
 	private Game g;
-	
 	private ActionMap am;
 	private InputMap im;
 	
@@ -169,9 +170,8 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 		
 		g = new Game(this,t);
 		game = true;
-		
-		tFps.start();
-		t0.start();
+
+		new RenderingThread(gp).start();
 		openGame();
 	}
 	
@@ -191,14 +191,14 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 		}
 		game = true;
 		
-		tFps.start();
-		t0.start();
+		new RenderingThread(gp).start();
 		openGame();
 	}
-
+	
 	public void openMenu(){
 		if(INFO)System.out.println("[SYS]["+state+"]Ouverture du menu");
-		if(game)g.getTick().stop();
+
+		if(game)g.pause2();
 		gp.removeAll();
 		gp.setLayout(new BorderLayout());
 		mp = new MenuPanel(this);
@@ -216,7 +216,8 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 		gp.setLayout(new BorderLayout());
 		pp = new PopulationPanel(this);
 		gp.add(pp,null);
-		g.getTick().stop();
+
+		g.pause2();
 		JPanel gpn = new JPanel();
 		gp.add(gpn,null);
 		gpn.setVisible(false);
@@ -227,12 +228,13 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 		if(INFO)System.out.println("[SYS]["+state+"]Ouverture d'une pop-up");
 		switch(state){
 			case 1:
-				if(game)g.getTick().stop();
+
+				if(game)g.pause2();
 				gp.removeAll();
 				gp.setLayout(new BorderLayout());
 				pup = new PopUpPanel(this,title,texte, sb1, sb2, al1, al2);
 				gp.add(pup,null);
-				g.getTick().stop();
+				g.pause2();
 				JPanel gpn = new JPanel();
 				gp.add(gpn,null);
 				gpn.setVisible(false);
@@ -248,7 +250,8 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 		if(INFO)System.out.println("[SYS]["+state+"]Ouverture d'une pop-up");
 		switch(state){
 			case 1:
-				if(game)g.getTick().stop();
+
+				if(game)g.pause2();
 				gp.removeAll();
 				gp.setLayout(new BorderLayout());
 				pup = new PopUpPanel(this,title,texte, sb1, al1);
@@ -293,7 +296,8 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 		gp.setLayout(new BorderLayout());
 		cp = new ConstructionPanel(this);
 		gp.add(cp,BorderLayout.CENTER);
-		g.getTick().stop();
+
+		if(game)g.pause2();
 		JPanel gpn = new JPanel();
 		gp.add(gpn,BorderLayout.CENTER);
 		gpn.setVisible(false);
@@ -316,8 +320,8 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 		
 		state = 0;
 		if(INFO)System.out.println("[SYS]["+state+"]Ouverture du menu principal");
-		if(game)g.getTick().stop();
-		if(game)g.getTanim().stop();
+
+		if(game)g.stop2();
 		mmp = new MainMenuPanel(this);
 		content.removeAll(); 
 		content.setLayout(new BorderLayout());
@@ -386,8 +390,10 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 		
 		i2p.getBa().enable(false);
 		
-		g.open(this);
 		
+		g.open(this);
+
+		g.start();
 		
 		
 		}
@@ -436,6 +442,16 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 
 	public Game getG() {
 		return g;
+	}
+
+	public Thread getGpt() {
+		return gpt;
+	}
+
+	public void resumeG(){
+		if(g.isPaused()){
+			g.resume2();
+		}
 	}
 
 	public Info2Panel getI2p() {
@@ -497,7 +513,6 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 	}
 	
 	public void keyPressed(int keyCode){
-		//TODO
 		switch(state){
 		case 0:
 			break;
@@ -536,13 +551,28 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 		
 	}
 	
+	public void i2prep(){
+		i2p.repaint();	
+	}
+	public void setWheelCheck(boolean wheelCheck) {
+		this.wheelCheck = wheelCheck;
+	}
+
+	public void repaintgp(){
+		gp.repaint();
+		wheelCheck = true;
+	}
+	
 	//ActionListener
 	public void actionPerformed(ActionEvent e){
 		
-		
-		
-		
+
+		/*if(e.getSource()== g.getTick()){
+			i2p.repaint();	
+		}*/
+		/*
 		if(e.getSource()==t0){
+			//TODO
 			gp.repaint();
 			if(DEV)this.setTitle("FPS:"+fps+" X:"+mouseX+" Y:"+mouseY+" Zoom:"+gp.getZoom()+" camX:"+g.getCamX()+" camY:"+g.getCamY());
 			wheelCheck = true;
@@ -563,15 +593,20 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 					g.setCamY(g.getCamY()-(10-((gp.getHeight()-mouseY)*10/y)));
 				}
 			}
-			*/
+			**
 		}
-
-		if(e.getSource()==tFps)
+		*/
+		/*
+		if(e.getSource()==tFps){
 			fps = gp.getFps();
+			if(DEV)this.setTitle("FPS:"+fps+" Zoom:"+gp.getZoom()+" camX:"+g.getCamX()+" camY:"+g.getCamY());
+		}*/
+			
 		
 		if(GPisClean()){
 			if(e.getSource()== i2p.getBp()){
-				g.getTick().stop();
+
+				if(game)g.pause2();
 				i2p.getBp().enable(false);
 				i2p.getBa().enable(true);
 				i2p.getBar().enable(true);
@@ -579,26 +614,29 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 			}
 		
 			if(e.getSource()==i2p.getBa()){
-					g.getTick().setDelay(g.getDELAY()[0]);
-					g.getTick().start();
-					i2p.getBp().enable(true);
-					i2p.getBa().enable(false);
-					i2p.getBar().enable(true);
-					i2p.getBsar().enable(true);
+
+				g.setTick(g.getDELAY()[0]);
+				resumeG();
+				i2p.getBp().enable(true);
+				i2p.getBa().enable(false);
+				i2p.getBar().enable(true);
+				i2p.getBsar().enable(true);
 			}
 			
 			if(e.getSource()==i2p.getBar()){
-					g.getTick().setDelay(g.getDELAY()[1]);
-					g.getTick().start();
-					i2p.getBp().enable(true);
-					i2p.getBa().enable(true);
-					i2p.getBar().enable(false);
-					i2p.getBsar().enable(true);
+
+				g.setTick(g.getDELAY()[1]);
+				resumeG();
+				i2p.getBp().enable(true);
+				i2p.getBa().enable(true);
+				i2p.getBar().enable(false);
+				i2p.getBsar().enable(true);
 			}
 			
 			if(e.getSource()==i2p.getBsar()){
-				g.getTick().setDelay(g.getDELAY()[2]);
-				g.getTick().start();
+
+				g.setTick(g.getDELAY()[2]);
+				resumeG();
 				i2p.getBp().enable(true);
 				i2p.getBa().enable(true);
 				i2p.getBar().enable(true);
@@ -634,9 +672,7 @@ public class Base extends JFrame implements ActionListener,MouseListener,MouseMo
 			}
 		}
 		
-		if(e.getSource()== g.getTick()){
-			i2p.repaint();	
-		}
+		
 	}
 	//MouseMotionListener
 	public void mouseMoved(MouseEvent e){
